@@ -1,7 +1,15 @@
 ---
-title: "vadymmusiienko.github.io"
+image: "media/profile.png"
+toc: false
+about: 
+  template: jolla
+  image-shape: round
+  links:
+    - text: LinkedIn
+      href: https://www.linkedin.com/in/vadymmusiienko
+    - text: GitHub
+      href: https://github.com/vadymmusiienko
+    - text: Email
+      href: mailto:musiienkovadym@gmail.com
 ---
-
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+Hi there! I'm Vadym, a student at Pomona College. I love learning about data and the sciences. 
