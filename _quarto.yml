@@ -8,11 +8,9 @@ website:
     right:
       - text: "Home"
         href: index.qmd
-      - text: "About Me"
-        href: about.qmd
       - text: "Data Viz"
         menu: 
-         - text: "IMO"
+         - text: "International Mathematical Olympiad"
            href: imo.html
          - text: "Refugees"
            href: refugees.html

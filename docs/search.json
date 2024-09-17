@@ -4,7 +4,7 @@
     "href": "imo.html",
     "title": "International Mathematical Olympiad",
     "section": "",
-    "text": "This plot shows the total number of male and female contestants in the International Mathematical Olympiad (IMO) over time, from the 1950s to the 2020s. The blue line represents the number of male participants, and the red line represents the number of female participants.\nKey observations:\nThe number of male contestants has increased dramatically over time, particularly from the 1980s onward, reaching over 400 participants in recent years. The number of female contestants, while also increasing slightly over time, remains significantly lower compared to male contestants. There is a noticeable gender disparity, with male contestants consistently outnumbering female contestants throughout the entire period. The plot highlights a persistent gender gap in participation, despite the overall growth in the number of contestants."
+    "text": "This plot shows the total number of male and female contestants in the International Mathematical Olympiad (IMO) over time, from the 1950s to the 2020s. The blue line represents the number of male participants, and the red line represents the number of female participants.\nKey observations:\nThe number of male contestants has increased dramatically over time, particularly from the 1980s onward, reaching over 400 participants in recent years.The number of female contestants, while also increasing slightly over time, remains significantly lower compared to male contestants.There is a noticeable gender disparity, with male contestants consistently outnumbering female contestants throughout the entire period.The plot highlights a persistent gender gap in participation, despite the overall growth in the number of contestants."
   },
   {
     "objectID": "about.html",
@@ -18,6 +18,13 @@
     "href": "index.html",
     "title": "Vadym Musiienko",
     "section": "",
-    "text": "Hi there! I’m Vadym, a student at Pomona College. I love learning about data and the sciences."
+    "text": "Hi there! I’m Vadym, a student at Pomona College. I love learning about Data Science!"
+  },
+  {
+    "objectID": "refugees.html",
+    "href": "refugees.html",
+    "title": "Refugees",
+    "section": "",
+    "text": "This bar chart displays the top 5 countries hosting the most Ukrainian refugees (since the beginning of the full-scale invasion).The y-axis represents the total number of refugees, with Russia hosting the highest number, exceeding a million. Germany and Poland follow closely with almost a million refugees each, while the Czech Republic has just under 500,000. The UK has the fewest refugees among the five countries, with less than 250,000.\nKey observations:\nThe significant difference in the number of Ukrainian refugees in Russia compared to other countries is striking, prompting the question: why are people fleeing the war to the very aggressor? This is primarily because Russian forces in occupied Ukrainian territories forcibly deporting people to Russia, labeling them as “refugees” and leaving them with no other option. In contrast, Poland and Germany are popular destinations for Ukrainian refugees, likely due to their proximity and strong support."
   }
 ]

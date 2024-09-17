@@ -12,4 +12,4 @@ about:
     - text: Email
       href: mailto:musiienkovadym@gmail.com
 ---
-Hi there! I'm Vadym, a student at Pomona College. I love learning about data and the sciences. 
+Hi there! I'm Vadym, a student at Pomona College. I love learning about Data Science!

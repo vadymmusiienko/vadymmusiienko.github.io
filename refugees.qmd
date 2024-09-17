@@ -9,9 +9,7 @@ about:
   template: jolla
   links:
     - text: TidyTuesday
-      href: https://github.com/rfordatascience/tidytuesday
-    - text: Author
-      href: https://github.com/havishak
+      href: https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-08-22
 ---
 
 ```{r}
@@ -29,7 +27,7 @@ population <- tuesdata$population
 
 # Wrangle and visualize data
 population |>
-  filter(coo == "UKR", year >= 2013) |>
+  filter(coo == "UKR", year >= 2022) |>
   group_by(coa_name) |>
   summarize(total_refugees = sum(refugees, na.rm = TRUE)) |>
   arrange(desc(total_refugees)) |>
@@ -49,5 +47,10 @@ population |>
   theme_minimal() +
   theme(legend.position = "none",
         plot.title = element_text(hjust = 0.5))
-
 ```
+
+*This bar chart displays the top 5 countries hosting the most Ukrainian refugees (since the beginning of the full-scale invasion).The y-axis represents the total number of refugees, with Russia hosting the highest number, exceeding a million. Germany and Poland follow closely with almost a million refugees each, while the Czech Republic has just under 500,000. The UK has the fewest refugees among the five countries, with less than 250,000.*
+
+**Key observations:**
+
+The significant difference in the number of Ukrainian refugees in Russia compared to other countries is striking, prompting the question: why are people fleeing the war to the very aggressor? This is primarily because Russian forces in occupied Ukrainian territories forcibly deporting people to Russia, labeling them as "refugees" and leaving them with no other option. In contrast, Poland and Germany are popular destinations for Ukrainian refugees, likely due to their proximity and strong support.
