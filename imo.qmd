@@ -1,0 +1,60 @@
+---
+title: "International Mathematical Olympiad"
+description: |
+  Analysis of International Mathematical Olympiad (IMO) Data from TidyTuesday
+author: Vadym Musiienko
+date: September 18, 2024
+format: html
+about: 
+  template: jolla
+  links:
+    - text: TidyTuesday
+      href: https://github.com/rfordatascience/tidytuesday
+    - text: Author
+      href: https://github.com/havishak
+---
+
+```{r}
+#| echo: false
+#| message: false
+
+# Load needed libraries
+library(tidyverse)
+
+# Load all the data
+tuesdata <- tidytuesdayR::tt_load('2024-09-24')
+
+# Unpack a data frame I need
+timeline_df <- tuesdata$timeline_df
+
+# 2 other data frames that are in the tuesdate
+# country_results_df <- tuesdata$country_results_df
+# individual_results_df <- tuesdata$individual_results_df
+
+
+# Wrangle and visualize data
+timeline_df |> 
+  group_by(year) |>
+  summarize(Female = sum(female_contestant, na.rm = TRUE),
+            Male = sum(male_contestant, na.rm = TRUE)) |>
+  pivot_longer(cols = c(Female, Male), 
+               names_to = "gender", 
+               values_to = "total") |>
+  ggplot(aes(x = year, y = total, color = gender)) +
+  geom_line(linewidth = 1.2) +
+  labs(title = "Total Male and Female IMO Contestants Over Time",
+       x = "Year", 
+       y = "Total Contestants",
+       color = "Gender") +
+  theme_minimal()
+  
+```
+
+This plot shows the total number of male and female contestants in the International Mathematical Olympiad (IMO) over time, from the 1950s to the 2020s. The blue line represents the number of male participants, and the red line represents the number of female participants.
+
+Key observations:
+
+The number of male contestants has increased dramatically over time, particularly from the 1980s onward, reaching over 400 participants in recent years.
+The number of female contestants, while also increasing slightly over time, remains significantly lower compared to male contestants.
+There is a noticeable gender disparity, with male contestants consistently outnumbering female contestants throughout the entire period.
+The plot highlights a persistent gender gap in participation, despite the overall growth in the number of contestants.

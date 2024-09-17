@@ -1,0 +1,53 @@
+---
+title: "Refugees"
+description: |
+  Analysis of Refugees Data from TidyTuesday
+author: Vadym Musiienko
+date: September 18, 2024
+format: html
+about: 
+  template: jolla
+  links:
+    - text: TidyTuesday
+      href: https://github.com/rfordatascience/tidytuesday
+    - text: Author
+      href: https://github.com/havishak
+---
+
+```{r}
+#| echo: false
+#| message: false
+
+# Load needed libraries
+library(tidyverse)
+
+# Load all the data
+tuesdata <- tidytuesdayR::tt_load('2023-08-22')
+
+# Unpack a data frame I need
+population <- tuesdata$population
+
+# Wrangle and visualize data
+population |>
+  filter(coo == "UKR", year >= 2013) |>
+  group_by(coa_name) |>
+  summarize(total_refugees = sum(refugees, na.rm = TRUE)) |>
+  arrange(desc(total_refugees)) |>
+  slice_head(n = 5) |>
+  mutate(country = recode(coa_name, "Czechia" = "Czech Republic",
+                           "Russian Federation" = "Russia",
+                           "United Kingdom of Great Britain and Northern Ireland"
+                           = "UK")) |>
+  ggplot(aes(fct_reorder(country, total_refugees), total_refugees, fill = country)) +
+  geom_col(width = 0.7) +
+  scale_y_continuous(labels = scales::comma_format()) +
+   labs(
+    title = "Top 5 Countries with Most Ukrainian Refugees",
+    x = NULL,
+    y = "Total Refugees",
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5))
+
+```
