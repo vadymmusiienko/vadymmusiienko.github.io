@@ -1,12 +1,14 @@
 ---
 title: "Refugees"
-description: |
-  Analysis of Refugees Data from TidyTuesday
+subtitle: Analysis of Refugees Data from [TidyTuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-08-22)
 author: Vadym Musiienko
 date: September 18, 2024
 format: html
+execute: 
+  warning: false
+  message: false
 about: 
-  template: jolla
+  template: marquee
   links:
     - text: TidyTuesday
       href: https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-08-22

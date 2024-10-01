@@ -10,11 +10,12 @@ website:
         href: index.qmd
       - text: "Data Viz"
         menu: 
+         - text: "Wine reviews"
+           href: wine.html
          - text: "International Mathematical Olympiad"
            href: imo.html
          - text: "Refugees"
            href: refugees.html
-
 format:
   html:
     theme:

@@ -1,12 +1,14 @@
 ---
 title: "International Mathematical Olympiad"
-description: |
-  Analysis of International Mathematical Olympiad (IMO) Data from TidyTuesday
+subtitle: Analysis of International Mathematical Olympiad (IMO) Data from [TidyTuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2024/2024-09-24)
 author: Vadym Musiienko
 date: September 18, 2024
 format: html
+execute: 
+  warning: false
+  message: false
 about: 
-  template: jolla
+  template: marquee
   links:
     - text: TidyTuesday
       href: https://github.com/rfordatascience/tidytuesday/tree/master/data/2024/2024-09-24
