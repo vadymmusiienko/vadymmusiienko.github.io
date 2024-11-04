@@ -17,5 +17,14 @@
   "wine.qmd": {
     "wine.tex": "0dfe0c91",
     "wine.html": "da213bd5"
+  },
+  "gpa.qmd": {
+    "gpa.html": "545a846d"
+  },
+  "smoking.qmd": {
+    "smoking.html": "9b579166"
+  },
+  "sleep.qmd": {
+    "sleep.html": "b2a4a63f"
   }
 }
