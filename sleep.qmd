@@ -291,6 +291,8 @@ perm_stats |>
   theme_minimal()
 ```
 
+This histogram shows that the observed average difference is not 
+significant and is likely to occur by chance.
 
 #### Visualize the null sampling distribution (median)
 
@@ -307,6 +309,8 @@ perm_stats |>
   theme_minimal()
 ```
 
+This histogram shows that the observed median difference is not 
+significant and is likely to occur by chance.
 
 #### P-value
 ```{r}
