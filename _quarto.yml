@@ -10,6 +10,8 @@ website:
         href: index.qmd
       - text: "Data Viz"
         menu: 
+         - text: "WAI"
+           href: WAI.html
          - text: "Sleep quality"
            href: sleep.html
          - text: "Wine reviews"
