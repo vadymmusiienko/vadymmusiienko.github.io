@@ -1,0 +1,305 @@
+---
+title: "WAI"
+subtitle: Wideband Acoustic Immittance
+author: Vadym Musiienko
+date: November 24, 2024
+format: html
+execute: 
+  warning: false
+  message: false
+image: "media/frequency.jpg"
+about: 
+  template: marquee
+  image-width: 25em
+  links:
+    - text: Wideband Acoustic Immittance (WAI) Database
+      href: https://www.science.smith.edu/wai-database/
+
+---
+
+### Introduction
+
+This analysis explores the Wideband Acoustic Immittance (WAI) Database hosted by Smith College. The database contains measurements of acoustic properties in human ears, including absorbance, power reflectance, impedance, and other related quantities. Implemented in MySQL, this online database serves as a repository for normative adult WAI measures, facilitating data sharing and analysis across different research studies. The database is publicly accessible [here](http://www.science.smith.edu/wai-database/).
+
+The analysis has two primary objectives:
+
+1. Reproduce Figure 1 from Voss (2020), which illustrates mean absorbances across various studies
+2. Visualize WAI mean absorbance across various studies for male and female participats.
+
+#### Load Necessary Libraries
+
+```{r}
+library(tidyverse)
+library(dbplyr)
+library(RMariaDB)
+```
+
+#### Connect to the database
+
+```{r}
+con_wai <- dbConnect(
+  MariaDB(), host = "scidb.smith.edu",
+  user = "waiuser", password = "smith_waiDB", 
+  dbname = "wai"
+)
+```
+
+### Data exploration
+
+#### Data base structure
+```{sql}
+#| connection: con_wai
+
+SHOW TABLES;
+```
+
+The WAI database consists of 7 tables, but our analysis will focus on the three
+most relevant and up-to-date tables: Measurements, PI_Info, and Subjects.
+
+#### Measurements table
+
+```{sql}
+#| connection: con_wai
+
+SELECT *
+FROM Measurements
+LIMIT 0, 5;
+```
+
+The Measurements table contains the core data of our analysis, including
+publication identifiers, instrument information, and most importantly, frequency
+and absorbance measurements. This table links to PI_Info through the Identifier 
+column and to Subjects through the SubjectNumber column.
+
+#### PI_Info table
+```{sql}
+#| connection: con_wai
+
+SELECT Identifier, Year, Authors, AuthorsShortList
+FROM PI_Info 
+LIMIT 0, 5;
+```
+The PI_Info table provides metadata about each publication, including author
+information and publication year.
+
+#### Subjects table
+```{sql}
+#| connection: con_wai
+
+SELECT *
+FROM Subjects
+LIMIT 0, 5;
+```
+
+The Subjects table contains demographic information about study participants, 
+including ethnicity, sex, and other relevant characteristics.
+
+
+### Part 1: Reproducing Voss (2020) Figure 1
+
+To recreate Figure 1 from 
+[Voss (2020)](https://pmc.ncbi.nlm.nih.gov/articles/PMC7093226/),
+we first need to identify the 
+publications included in the original figure. Let's examine the available
+identifiers in the database.
+
+#### Unique identifiers
+```{sql}
+#| connection: con_wai
+
+SELECT DISTINCT(Identifier) FROM Measurements;
+```
+
+After reviewing the list of Identifiers, I identified the following publications
+used in Voss (2020): Abur_2014, Feeney_2017, Groon_2015, Lewis_2015, Liu_2008,
+Rosowski_2012, Shahnaz_2006, Shaver_2013, Sun_2016, Voss_1994, Voss_2010,and Werner_2010.
+
+#### Data acquisition
+
+To recreate the figure, we need to calculate average absorbance values across
+frequencies for each publication. The legend requires additional publication
+information retrieved from the PI_Info table.
+
+Query:
+
+```{sql}
+#| connection: con_wai
+#| output.var: "figure_data"
+
+SELECT 
+    Frequency,
+    AVG(Absorbance) AS Mean_absorbance,
+    CONCAT(pi.AuthorsShortList, ' (', pi.Year, ') N=', 
+    COUNT(DISTINCT SubjectNumber, Ear), ': ', m.Instrument) AS Publication
+FROM Measurements AS m
+JOIN PI_Info AS pi ON m.Identifier = pi.Identifier
+WHERE m.Identifier IN 
+  ("Abur_2014", "Feeney_2017", "Groon_2015", "Lewis_2015", "Liu_2008",
+  "Rosowski_2012", "Shahnaz_2006", "Shaver_2013", "Sun_2016",
+  "Voss_1994", "Voss_2010", "Werner_2010")
+GROUP BY Frequency, m.Identifier, pi.Year, m.Instrument
+```
+
+
+#### Custom theme
+
+We designed a custom theme for the plot to align with the style of the original figure.
+
+
+```{r}
+custom_theme <- theme(
+  # Background
+  panel.background = element_rect(fill = "white", color = "grey"),
+  panel.grid.minor = element_line(color = "gray80"), 
+  
+  # Axis text and titles
+  axis.text = element_text(size = 8),
+  axis.title = element_text(size = 11, colour = "black"),
+  
+  # Legend
+  legend.position = c(0, 1),
+  legend.justification = c(0, 1),
+  legend.key.size = unit(0.4, "cm"),
+  legend.text = element_text(size = 9),
+  legend.key = element_rect(fill = "white", color = "white"),
+  legend.background = element_rect(
+    fill = "white",
+    color = "grey",
+    size = 0.5
+  ),
+  
+  # Title
+  plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+  
+  # Ticks on x and y axis
+  axis.ticks = element_line(color = "grey", size = 0.5),
+  axis.ticks.length = unit(0.2, "cm")
+)
+```
+
+#### Recreate Figure 1 from Voss (2020)
+
+Here is the code for the final visualization:
+
+```{r}
+#| fig-height: 7
+#| fig-width: 7
+
+figure_data |> 
+  ggplot(
+  aes(Frequency, Mean_absorbance, color = Publication)
+  ) +
+  geom_line(size = 1) +
+  
+  # Zoom in on the interval of interest
+  coord_cartesian(xlim = c(200, 8000), ylim = c(0, 1)) +
+  
+  # Add custom ticks on x-axis
+  scale_x_continuous(
+    breaks = c(200, 400, 600, 800, 1000, 2000, 4000, 6000, 8000),
+    trans = "pseudo_log"
+                 ) +
+  
+  # Add custom ticks on y-axis
+  scale_y_continuous(
+    breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
+                 ) +
+  
+  # Add the labels
+  labs(
+    title = "Mean absorbance from each population in WAI database",
+    x = "Frequency (Hz)",
+    y = "Mean absorbance",
+    color = NULL
+  ) + 
+  
+  # Apply the custom theme
+  custom_theme
+
+```
+Voss (2020) describes the figure as follows:
+
+"Mean absorbances for the 12 studies within the WAI database as of July 1, 2019. The legend includes peer-reviewed publications, the number of individual ears, and the equipment used in the studies. For ears with multiple measurements, the average was used. The figure includes all ears in the database, without controlling for the number of ears from each subject."
+
+
+### Analyze mean absorbance for male and female
+
+#### Data acquisition
+
+This analysis aims to determine whether there is a difference in mean absorbance
+between male and female participants. As in the previous analysis, we use the 
+same set of publications. Participant sex information is retrieved from the 
+Subjects table, which is joined with the Measurements table to link absorbance 
+data with demographic details.
+
+Query:
+
+```{sql}
+#| connection: con_wai
+#| output.var: "wai_sex"
+
+SELECT 
+    Frequency,
+    CASE 
+      WHEN UPPER(Sex) LIKE '%MALE%' THEN 'Male'
+      WHEN UPPER(Sex) LIKE '%FEMA%' THEN 'Female'
+    END AS Sex,
+    AVG(Absorbance) AS Mean_absorbance,
+    CONCAT(Sex, ' N=', 
+    COUNT(DISTINCT m.SubjectNumber, Ear), ': ', m.Identifier) AS Label
+FROM Measurements AS m
+JOIN Subjects AS s ON m.SubjectNumber = s.SubjectNumber
+WHERE m.Identifier IN ("Abur_2014", "Feeney_2017", "Groon_2015", "Lewis_2015", "Liu_2008", "Rosowski_2012", "Shahnaz_2006", "Shaver_2013", "Sun_2016", "Voss_1994", "Voss_2010", "Werner_2010") 
+AND Sex != 'Unknown'
+GROUP BY Frequency, s.Sex, m.Identifier
+```
+
+
+#### Visualization
+
+The following R code generates the visualization to compare mean absorbance between male and female participants:
+
+```{r}
+# Graph the data
+wai_sex |>
+  ggplot(
+  aes(Frequency, Mean_absorbance, group = Label, color = Sex)
+  ) +
+  geom_line(size = 1) +
+  
+  # Zoom in on the interval of interest
+  coord_cartesian(xlim = c(200, 8000), ylim = c(0, 1)) +
+  
+  # Add custom ticks on x-axis
+  scale_x_continuous(
+    breaks = c(200, 400, 600, 800, 1000, 2000, 4000, 6000, 8000),
+    trans = "pseudo_log"
+                 ) +
+  
+  # Add custom ticks on y-axis
+  scale_y_continuous(
+    breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
+                 ) +
+  
+  # Add the labels
+  labs(
+    title = "Mean absorbance for male and female",
+    x = "Frequency (Hz)",
+    y = "Mean absorbance",
+    color = NULL
+  ) + 
+  
+  # Apply the custom theme
+  custom_theme
+```
+
+This plot reveals that female participants exhibit higher absorbance than males around the 800 Hz frequency range. However, the difference diminishes below 800 Hz and beyond 5000 Hz, where absorbance levels for both sexes are nearly identical.
+
+
+#### Disconnect from the Database
+
+```{r}
+# Disconnect from the database
+dbDisconnect(con_wai, shutdown = TRUE)
+```
+
