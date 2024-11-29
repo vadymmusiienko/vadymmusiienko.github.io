@@ -12,5 +12,7 @@ about:
     - text: Email
       href: mailto:musiienkovadym@gmail.com
 ---
-Welcome! I’m Vadym — a Software Engineer and Pomona College student passionate 
+**Welcome to my page!**
+
+I’m Vadym — a Software Engineer and Pomona College student passionate 
 about working with data and building fun projects.

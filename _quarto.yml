@@ -17,7 +17,7 @@ website:
          - text: "Sleep Science"
            href: sleep.html
          - text: "TidyTuesday Projects"
-         - href: mini.html
+           href: mini.html
 format:
   html:
     theme:
