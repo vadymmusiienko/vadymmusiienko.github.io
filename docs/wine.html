@@ -176,10 +176,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
   <ul>
-  <li><a href="#import-libraries-and-data" id="toc-import-libraries-and-data" class="nav-link active" data-scroll-target="#import-libraries-and-data">Import Libraries and Data</a></li>
-  <li><a href="#inspect-the-dataset" id="toc-inspect-the-dataset" class="nav-link" data-scroll-target="#inspect-the-dataset">Inspect the Dataset</a></li>
-  <li><a href="#clean-the-data" id="toc-clean-the-data" class="nav-link" data-scroll-target="#clean-the-data">Clean the Data:</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#analisys" id="toc-analisys" class="nav-link" data-scroll-target="#analisys">Analisys</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -210,23 +209,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </header> <main class="content column-page-left" id="quarto-document-content">
 
-<section id="import-libraries-and-data" class="level3">
-<h3 data-anchor-id="import-libraries-and-data">Import Libraries and Data</h3>
+<section id="introduction" class="level3">
+<h3 data-anchor-id="introduction">Introduction</h3>
+<p>The world of wine is rich with complexity, offering a diverse range of flavors, prices, and qualities. In this project we will analyze trends in wine characteristics by examining a <a href="https://www.kaggle.com/datasets/zynicide/wine-reviews">Kaggle dataset</a> of over 150,000 wine reviews. Through this exploration, we aim to uncover insights about the relationship between price, quality, and the descriptive notes used by wine experts. By analyzing factors such as the average price of wine by country, the correlation between price and ratings, and the impact of specific flavor notes on wine quality, this project seeks to provide a comprehensive view of what influences wine preferences and how they correlate to market values.</p>
+</section>
+<section id="analisys" class="level3">
+<h3 data-anchor-id="analisys">Analisys</h3>
+<section id="import-libraries-and-data" class="level4">
+<h4 data-anchor-id="import-libraries-and-data">Import Libraries and Data</h4>
 <p>The tidyverse package is used for data visualization, while ggrepel adds functionality for labeling text on plots.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the libraries</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>wine_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/winemag-data_first150k.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>wine_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/winemag-data_first150k.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="inspect-the-dataset" class="level3">
-<h3 data-anchor-id="inspect-the-dataset">Inspect the Dataset</h3>
+<section id="inspect-the-dataset" class="level4">
+<h4 data-anchor-id="inspect-the-dataset">Inspect the Dataset</h4>
 <p>Let’s take a look at the first 10 records.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_head</span>(wine_data, <span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(wine_data, <span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 11
     ...1 country description designation points price province region_1 region_2
@@ -245,9 +249,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="clean-the-data" class="level3">
-<h3 data-anchor-id="clean-the-data">Clean the Data:</h3>
-<p>From inspecting the dataset, it appears that the country variable is of type <chr>, but I want it to be <fct> (a factor) so that it can be ordered. Additionally, I will be analyzing the price and rating (points) of the wine, so I want to remove any rows where these variables contain missing (NA) values. Finally, my analysis will not include regions and wineries, so I will exclude those columns.</fct></chr></p>
+<section id="clean-the-data" class="level4">
+<h4 data-anchor-id="clean-the-data">Clean the Data</h4>
+<p>From inspecting the dataset, it appears that the country variable is of type <chr>, but we want it to be <fct> (a factor) so that it can be ordered. Additionally, we will be analyzing the price and rating (points) of the wine, so we want to remove any rows where these variables contain missing (NA) values. Finally, this analysis will not include regions and wineries, so we will exclude those columns.</fct></chr></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up the data</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>wine_data <span class="ot">&lt;-</span> wine_data <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span>(<span class="fu">is.na</span>(price) <span class="sc">|</span> <span class="fu">is.na</span>(country))) <span class="sc">|&gt;</span></span>
@@ -255,8 +259,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(region_1, region_2, winery))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="analisys" class="level3">
-<h3 data-anchor-id="analisys">Analisys</h3>
 <section id="average-price-by-country" class="level4">
 <h4 data-anchor-id="average-price-by-country">Average price by country</h4>
 <p>One of the first interesting insights would be to determine which countries produce the most expensive and the cheapest wines. To find this out, let’s create a plot showing the average wine prices for each country in the dataset.</p>
@@ -282,7 +284,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The countries that produce the most expensive wines are the US, France, England, Hungary, and Luxembourg, with average prices ranging from 40 to 50 USD. On the other hand, the cheapest wine producers are Montenegro, Lithuania, Bulgaria, Bosnia, and Ukraine, where wines typically cost between 10 and 15 USD.</p>
+<p><em>The countries that produce the most expensive wines are the US, France, England, Hungary, and Luxembourg, with average prices ranging from 40 to 50 USD. On the other hand, the cheapest wine producers are Montenegro, Lithuania, Bulgaria, Bosnia, and Ukraine, where wines typically cost between 10 and 15 USD.</em></p>
 </section>
 <section id="correlation-between-price-and-quality" class="level4">
 <h4 data-anchor-id="correlation-between-price-and-quality">Correlation between Price and Quality</h4>
@@ -309,11 +311,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>There is definitely a correlation between price and rating, with more expensive wines tending to have higher ratings. However, the relationship is stronger in the 0 to 100 USD range, where price significantly impacts quality. Beyond 100 USD, wines are fairly similar in quality, with higher prices offering only a slight improvement.</p>
+<p><em>There is definitely a correlation between price and rating, with more expensive wines tending to have higher ratings. However, the relationship is stronger in the 0 to 100 USD range, where price significantly impacts quality. Beyond 100 USD, wines are fairly similar in quality, with higher prices offering only a slight improvement.</em></p>
 </section>
 <section id="flavor-notes-affect-on-price-and-quality" class="level4">
 <h4 data-anchor-id="flavor-notes-affect-on-price-and-quality">Flavor notes affect on price and quality</h4>
-<p>Wine can have a wide variety of flavors, described using different flavor notes. To determine which flavor notes are the most desirable, I identified 24 of the most commonly used adjectives to describe wine flavors. You can find the article with this information <a href="https://www.masterclass.com/articles/wine-descriptions">here</a>.</p>
+<p>Wine can have a wide variety of flavors, described using different flavor notes. To determine which flavor notes are the most desirable, we identified 24 of the most commonly used adjectives to describe wine flavors. You can find the article with this information <a href="https://www.masterclass.com/articles/wine-descriptions">here</a>.</p>
 <p>First, let’s see if these adjectives are actually used in the wine reviews and which ones are more common than others. We’ll plot the frequency of each adjective mentioned in the description section of the reviews.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a vector with the adjectives</span></span>
@@ -379,11 +381,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The clear winner among the flavor notes is “opulent,” which is often associated with the most sophisticated wines. Opulent wines not only have the highest prices but also receive the best ratings. Close contenders are “velvety” and “astringent.” Both velvety and astringent wines are also quite expensive, with velvety wines having higher ratings. In contrast, the cheapest and lowest-quality wines are described as “musty,” “flabby,” and “vegetal.”</p>
+<p><em>The clear winner among the flavor notes is “opulent,” which is often associated with the most sophisticated wines. Opulent wines not only have the highest prices but also receive the best ratings. Close contenders are “velvety” and “astringent.” Both velvety and astringent wines are also quite expensive, with velvety wines having higher ratings. In contrast, the cheapest and lowest-quality wines are described as “musty,” “flabby,” and “vegetal.”</em></p>
 </section>
 <section id="berry-notes" class="level4">
 <h4 data-anchor-id="berry-notes">Berry notes</h4>
-<p>While reviewing the descriptions, I noticed that wine is often described as having various berry flavor notes. Let’s conduct a similar analysis to determine which berry flavor is considered the most “expensive.”</p>
+<p>While reviewing the descriptions, we noticed that wine is often described as having various berry flavor notes. Let’s conduct a similar analysis to determine which berry flavor is considered the most “expensive.”</p>
 <p>The regular expression I used for matching berries is: (?i)\b\w+erry\b.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A data frame with wines that were described with some berry</span></span>
@@ -426,10 +428,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Wines with blackberry flavor tend to be the most expensive, with an average price of around $42. In contrast, strawberry-flavored wines are the cheapest, averaging $32.</p>
-
-
+<p><em>Wines with blackberry flavor tend to be the most expensive, with an average price of around $42. In contrast, strawberry-flavored wines are the cheapest, averaging $32.</em></p>
 </section>
+</section>
+<section id="conclusion" class="level3">
+<h3 data-anchor-id="conclusion">Conclusion</h3>
+<p>This project explored the relationships between wine characteristics, including price, quality, and flavor notes, based on a dataset of over 150,000 wine reviews. By examining the average price of wine by country, we uncovered interesting trends in global wine pricing. We also explored the correlation between price and quality, revealing that while more expensive wines tend to have higher ratings, the relationship is less pronounced at higher price points. Further, our analysis of flavor notes showed that descriptors like “opulent,” “velvety,” and “astringent” are linked to higher-priced and higher-rated wines, while terms like “musty” and “flabby” correlate with lower-quality wines. Additionally, berry flavor notes such as “blackberry” were associated with the most expensive wines. Overall, this exploration provides a comprehensive look at the factors that influence wine preferences and their market value, offering useful insights for both wine enthusiasts and producers.</p>
+
+
 </section>
 </main> 
     <div class="about-footer"><div class="about-links">

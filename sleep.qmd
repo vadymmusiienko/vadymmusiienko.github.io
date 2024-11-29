@@ -34,15 +34,19 @@ greater sleep efficiency compared to those with lower levels of physical activit
 
 
 ### Data
-To answer the question of whether physical activity positively affects sleep efficiency, I chose a dataset from [Multilevel Monitoring of Activity and Sleep in Healthy People by PhysioNet](https://physionet.org/content/mmash/1.0.0/) (MMASH). The data were collected and provided by BioBeats in collaboration with researchers from the University of Pisa. The dataset contains information about 22 healthy young adult males. Even though MMASH consists of seven files for each participant, in this analysis, we focus on two key files from the collection: Sleep.csv and Activity.csv.
+To answer the question of whether physical activity positively affects sleep efficiency, we chose a dataset from [Multilevel Monitoring of Activity and Sleep in Healthy People by PhysioNet](https://physionet.org/content/mmash/1.0.0/) (MMASH). The data were collected and provided by BioBeats in collaboration with researchers from the University of Pisa. The dataset contains information about 22 healthy young adult males. The subjects were observed for 24 hours, during which they slept twice. Consequently, the dataset consists of variables for both day 1 and day 2.
+
+The data consists of directories for each of the 22 participants, with 7 files in each participant's folder.
+
+Although MMASH provides seven files per participant, this analysis focuses on two key files: Sleep.csv and Activity.csv.
 
 Sleep.csv contains information about sleep duration and sleep quality of the participants, while Activity.csv provides a list of activity categories throughout the day. For this analysis, we focus specifically on physical activities:
 
 Light movement (4): Slow to medium-paced activities like walking, household chores, and work-related movements.
 Medium movement (5): More vigorous activities such as fast walking and biking.
 Heavy movement (6): High-intensity exercises like gym workouts and running.
-As for the sleep data, we will focus on the Latency Efficiency variable.
-
+As for the sleep data, we will focus on the Latency Efficiency variable,
+which is measured as a percentage of sleep time relative to total time spent in bed.
 
 ### Analysis
 
@@ -55,12 +59,12 @@ library(lubridate)
 ```
 
 #### Load and wrangle the data
-Since the data consists of separate files for each participant in the study, 
-we will have to read all files of interest for each participant and select
-only the columns that we will focus on.
+Since the data is organized into separate directories and files for each participant in the study, we need to read all the relevant files for each participant and extract only the columns of interest.
+
+The data includes the start and end times of each activity as well as the start and end times of sleep. As a result, we will need to calculate the duration of each activity and sleep ourselves.
 
 ```{r}
-# Path to the main data folder
+# Path to the main data folder (with 22 directories)
 data_path <- "data/SleepUsers/"
 
 # Get the list of user folders
@@ -137,9 +141,9 @@ activity_df <- activity_df |>
   pivot_wider(names_from = activity, values_from = total_duration, 
               values_fill = 0)
 
-# View the results
-activity_df
-sleep_df
+# View first 5 rows
+head(activity_df, n = 5)
+head(sleep_df, n = 5)
 ```
 Now that we have two dataframes with sleep and activity information, 
 we can merge them together by users.
@@ -148,9 +152,11 @@ we can merge them together by users.
 # Merge activity and sleep dataframes based on user
 merged_data <- activity_df |> inner_join(sleep_df, by = c("user"))
 
-# View the result
-merged_data
+# View the first 5 rows
+head(merged_data, n = 5)
 ```
+
+Now that we have our merged data, you may notice that most activity durations are whole numbers. Although the original source does not explain why these convenient numbers occur, we assume it is due to rounding. It is likely that participants provided approximate times that were rounded to whole numbers. (However, there are a few durations that are neither divisible by 5 nor 10.)
 
 #### Visualize the relationship of interest
 
@@ -173,8 +179,8 @@ activity <- merged_data |> group_by(user) |>
   ) |> 
   ungroup()
 
-# View the result
-activity
+# View first 5 rows
+head(activity, n = 5)
 ```
 
 To determine who counts as an active person, let's find the average minutes of
@@ -183,23 +189,26 @@ active and non-active, based on the average.
 
 ```{r}
 # Average time active in the population
-activity |> summarize(avr_time_active = mean(total_exercise))
+active_avr <- activity |> summarize(avr_time_active = mean(total_exercise)) |>
+  as.numeric()
+
+# See the average time active for a person in the population
+active_avr
 ```
 
-The average time active is 330 minutes, so let's use it to determine whether 
-a person is active or not.
+The average active time is 331 minutes, so let's use it to determine whether a person is considered active or not. (If a person exercises more than the average, they are classified as active; otherwise, they are not.)
 
 ```{r}
-# Minimum minutes of physical activity to be counted as "active"
-active_avr <- 330
-
 # Add a logical column that represents whether a user was active or not
 activity <- activity |>
   mutate(active = ifelse(total_exercise > active_avr, "Yes", "No")) 
 
-# View the result
-activity
+# View first 5 rows
+head(activity, n = 5)
 ```
+
+The data looks good, so let's go ahead and create a plot to see if there are any
+differences between groups.
 
 ```{r}
 activity |> 
@@ -214,7 +223,8 @@ activity |>
 ```
 
 From this boxplot, we can see that, in our population, people who exercise 
-more tend to have slightly better sleep efficiency.
+more tend to have slightly better sleep efficiency
+(percentage of sleep time relative to total time spent in bed).
 
 #### Calculate the observed statistics
 
@@ -227,8 +237,8 @@ activity |> group_by(active) |>
 ```
 
 The statistics above confirm that, on average, people in our population who 
-were active had slightly better sleep efficiency than those who didn't 
-exercise as much.
+were active had slightly better sleep efficiency (percentage of sleep time 
+relative to total time spent in bed) than those who didn't exercise as much.
 
 ```{r}
 # Difference in means and medians
@@ -242,7 +252,7 @@ activity |> group_by(active) |>
   )
 ```
 
-The difference in mean sleep efficiency between people who exercise more than average and those who do not is 3.4, and the difference in medians is 2.6.
+The difference in mean sleep efficiency between people who exercise more than average and those who do not is 3.4%, and the difference in medians is 2.6%.
 
 #### Generate a null sampling distribution.
 
@@ -268,7 +278,7 @@ perm_data <- function(rep, data) {
 }
 
 # Test the function
-map(1:10, perm_data, data = activity) |>
+map(1:5, perm_data, data = activity) |>
   list_rbind()
 ```
 
@@ -326,7 +336,8 @@ among 22 healthy young adult males. We categorized participants into active and
 inactive groups based on their total exercise duration, weighted by activity 
 intensity. Our analysis showed that the active group had a slightly higher 
 average sleep efficiency compared to the inactive group, with a mean difference 
-of 3.4% and a median difference of 2.6%.
+of 3.4% and a median difference of 2.6%. This means that people who exercised 
+more than the average slept 0.8% better.
 
 From these data, the observed differences seem to be consistent with the 
 distribution of differences in the null sampling distribution. There is no 
@@ -336,7 +347,7 @@ We cannot claim that, in the population, the average sleep efficiency for people
 
 We cannot claim that, in the population, the median sleep efficiency for people who exercise more than the average person is larger than the median sleep efficiency for people who do not exercise more than the average person (p-value = 0.21).
 
-Therefore, we conclude that, within this sample, there is no significant evidence to suggest that higher levels of physical activity are associated with improved sleep efficiency. It's important to note that the small sample size and the homogeneous nature of the participants (all healthy young adult males) may limit the generalizability of these findings. Further research with a larger and more diverse sample may be necessary to fully understand the relationship between physical activity and sleep efficiency.
+Therefore, we conclude that there is not enough evidence to rule out chance. It's important to note that the small sample size and the homogeneous nature of the participants (all healthy young adult males) may limit the generalizability of these findings. Further research with a larger and more diverse sample may be necessary to fully understand the relationship between physical activity and sleep efficiency.
 
 
 ### Reference

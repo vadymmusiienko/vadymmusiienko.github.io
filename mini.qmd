@@ -96,4 +96,4 @@ timeline_df |>
 
 **Key observations:**
 
-The number of male contestants has increased dramatically over time, particularly from the 1980s onward, reaching over 400 participants in recent years.The number of female contestants, while also increasing slightly over time, remains significantly lower compared to male contestants.There is a noticeable gender disparity, with male contestants consistently outnumbering female contestants throughout the entire period.The plot highlights a persistent gender gap in participation, despite the overall growth in the number of contestants.
+The number of male contestants has increased dramatically over time, particularly from the 1980s onward, reaching over 400 participants in recent years. The number of female contestants, while also increasing slightly over time, remains significantly lower compared to male contestants.There is a noticeable gender disparity, with male contestants consistently outnumbering female contestants throughout the entire period. The plot highlights a persistent gender gap in participation, despite the overall growth in the number of contestants.

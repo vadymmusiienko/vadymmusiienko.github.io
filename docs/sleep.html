@@ -229,9 +229,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="data" class="level3">
 <h3 data-anchor-id="data">Data</h3>
-<p>To answer the question of whether physical activity positively affects sleep efficiency, I chose a dataset from <a href="https://physionet.org/content/mmash/1.0.0/">Multilevel Monitoring of Activity and Sleep in Healthy People by PhysioNet</a> (MMASH). The data were collected and provided by BioBeats in collaboration with researchers from the University of Pisa. The dataset contains information about 22 healthy young adult males. Even though MMASH consists of seven files for each participant, in this analysis, we focus on two key files from the collection: Sleep.csv and Activity.csv.</p>
+<p>To answer the question of whether physical activity positively affects sleep efficiency, we chose a dataset from <a href="https://physionet.org/content/mmash/1.0.0/">Multilevel Monitoring of Activity and Sleep in Healthy People by PhysioNet</a> (MMASH). The data were collected and provided by BioBeats in collaboration with researchers from the University of Pisa. The dataset contains information about 22 healthy young adult males. The subjects were observed for 24 hours, during which they slept twice. Consequently, the dataset consists of variables for both day 1 and day 2.</p>
+<p>The data consists of directories for each of the 22 participants, with 7 files in each participant’s folder.</p>
+<p>Although MMASH provides seven files per participant, this analysis focuses on two key files: Sleep.csv and Activity.csv.</p>
 <p>Sleep.csv contains information about sleep duration and sleep quality of the participants, while Activity.csv provides a list of activity categories throughout the day. For this analysis, we focus specifically on physical activities:</p>
-<p>Light movement (4): Slow to medium-paced activities like walking, household chores, and work-related movements. Medium movement (5): More vigorous activities such as fast walking and biking. Heavy movement (6): High-intensity exercises like gym workouts and running. As for the sleep data, we will focus on the Latency Efficiency variable.</p>
+<p>Light movement (4): Slow to medium-paced activities like walking, household chores, and work-related movements. Medium movement (5): More vigorous activities such as fast walking and biking. Heavy movement (6): High-intensity exercises like gym workouts and running. As for the sleep data, we will focus on the Latency Efficiency variable, which is measured as a percentage of sleep time relative to total time spent in bed.</p>
 </section>
 <section id="analysis" class="level3">
 <h3 data-anchor-id="analysis">Analysis</h3>
@@ -245,9 +247,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="load-and-wrangle-the-data" class="level4">
 <h4 data-anchor-id="load-and-wrangle-the-data">Load and wrangle the data</h4>
-<p>Since the data consists of separate files for each participant in the study, we will have to read all files of interest for each participant and select only the columns that we will focus on.</p>
+<p>Since the data is organized into separate directories and files for each participant in the study, we need to read all the relevant files for each participant and extract only the columns of interest.</p>
+<p>The data includes the start and end times of each activity as well as the start and end times of sleep. As a result, we will need to calculate the duration of each activity and sleep ourselves.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Path to the main data folder</span></span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Path to the main data folder (with 22 directories)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data_path <span class="ot">&lt;-</span> <span class="st">"data/SleepUsers/"</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the list of user folders</span></span>
@@ -324,40 +327,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> activity, <span class="at">values_from =</span> total_duration, </span>
 <span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_fill =</span> <span class="dv">0</span>)</span>
 <span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="co"># View the results</span></span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>activity_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="co"># View first 5 rows</span></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(activity_df, <span class="at">n =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 22 × 4
-   user    heavy light medium
-   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
- 1 user_1    130    10     10
- 2 user_10    90    40      0
- 3 user_11    77     0      0
- 4 user_12    95     0     40
- 5 user_13   150     0      0
- 6 user_14    58     0      0
- 7 user_15    70     0    120
- 8 user_16    95     0      0
- 9 user_17   105     0     70
-10 user_18    40     0      0
-# ℹ 12 more rows</code></pre>
+<pre><code># A tibble: 5 × 4
+  user    heavy light medium
+  &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+1 user_1    130    10     10
+2 user_10    90    40      0
+3 user_11    77     0      0
+4 user_12    95     0     40
+5 user_13   150     0      0</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sleep_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sleep_df, <span class="at">n =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 21 × 2
-   user    avr_sleep_efc
-   &lt;chr&gt;           &lt;dbl&gt;
- 1 user_1           89.6
- 2 user_10          75.1
- 3 user_12          94.2
- 4 user_13          76.5
- 5 user_14          90.8
- 6 user_15          89.4
- 7 user_16          74.3
- 8 user_17          86.9
- 9 user_18          84.4
-10 user_19          74.1
-# ℹ 11 more rows</code></pre>
+<pre><code># A tibble: 5 × 2
+  user    avr_sleep_efc
+  &lt;chr&gt;           &lt;dbl&gt;
+1 user_1           89.6
+2 user_10          75.1
+3 user_12          94.2
+4 user_13          76.5
+5 user_14          90.8</code></pre>
 </div>
 </div>
 <p>Now that we have two dataframes with sleep and activity information, we can merge them together by users.</p>
@@ -365,25 +356,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge activity and sleep dataframes based on user</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>merged_data <span class="ot">&lt;-</span> activity_df <span class="sc">|&gt;</span> <span class="fu">inner_join</span>(sleep_df, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"user"</span>))</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View the result</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>merged_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View the first 5 rows</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(merged_data, <span class="at">n =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 21 × 5
-   user    heavy light medium avr_sleep_efc
-   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;         &lt;dbl&gt;
- 1 user_1    130    10     10          89.6
- 2 user_10    90    40      0          75.1
- 3 user_12    95     0     40          94.2
- 4 user_13   150     0      0          76.5
- 5 user_14    58     0      0          90.8
- 6 user_15    70     0    120          89.4
- 7 user_16    95     0      0          74.3
- 8 user_17   105     0     70          86.9
- 9 user_18    40     0      0          84.4
-10 user_19    95     0      0          74.1
-# ℹ 11 more rows</code></pre>
+<pre><code># A tibble: 5 × 5
+  user    heavy light medium avr_sleep_efc
+  &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;         &lt;dbl&gt;
+1 user_1    130    10     10          89.6
+2 user_10    90    40      0          75.1
+3 user_12    95     0     40          94.2
+4 user_13   150     0      0          76.5
+5 user_14    58     0      0          90.8</code></pre>
 </div>
 </div>
+<p>Now that we have our merged data, you may notice that most activity durations are whole numbers. Although the original source does not explain why these convenient numbers occur, we assume it is due to rounding. It is likely that participants provided approximate times that were rounded to whole numbers. (However, there are a few durations that are neither divisible by 5 nor 10.)</p>
 </section>
 <section id="visualize-the-relationship-of-interest" class="level4">
 <h4 data-anchor-id="visualize-the-relationship-of-interest">Visualize the relationship of interest</h4>
@@ -402,64 +388,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># View the result</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>activity</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># View first 5 rows</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(activity, <span class="at">n =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 21 × 3
-   user    total_exercise avr_sleep_efc
-   &lt;chr&gt;            &lt;dbl&gt;         &lt;dbl&gt;
- 1 user_1             420          89.6
- 2 user_10            310          75.1
- 3 user_12            365          94.2
- 4 user_13            450          76.5
- 5 user_14            174          90.8
- 6 user_15            450          89.4
- 7 user_16            285          74.3
- 8 user_17            455          86.9
- 9 user_18            120          84.4
-10 user_19            285          74.1
-# ℹ 11 more rows</code></pre>
+<pre><code># A tibble: 5 × 3
+  user    total_exercise avr_sleep_efc
+  &lt;chr&gt;            &lt;dbl&gt;         &lt;dbl&gt;
+1 user_1             420          89.6
+2 user_10            310          75.1
+3 user_12            365          94.2
+4 user_13            450          76.5
+5 user_14            174          90.8</code></pre>
 </div>
 </div>
 <p>To determine who counts as an active person, let’s find the average minutes of activity among the participants and divide the population into two parts: active and non-active, based on the average.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Average time active in the population</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>activity <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="at">avr_time_active =</span> <span class="fu">mean</span>(total_exercise))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>active_avr <span class="ot">&lt;-</span> activity <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="at">avr_time_active =</span> <span class="fu">mean</span>(total_exercise)) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>()</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># See the average time active for a person in the population</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>active_avr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 1
-  avr_time_active
-            &lt;dbl&gt;
-1            331.</code></pre>
+<pre><code>[1] 331.0952</code></pre>
 </div>
 </div>
-<p>The average time active is 330 minutes, so let’s use it to determine whether a person is active or not.</p>
+<p>The average active time is 331 minutes, so let’s use it to determine whether a person is considered active or not. (If a person exercises more than the average, they are classified as active; otherwise, they are not.)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Minimum minutes of physical activity to be counted as "active"</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>active_avr <span class="ot">&lt;-</span> <span class="dv">330</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a logical column that represents whether a user was active or not</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>activity <span class="ot">&lt;-</span> activity <span class="sc">|&gt;</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">active =</span> <span class="fu">ifelse</span>(total_exercise <span class="sc">&gt;</span> active_avr, <span class="st">"Yes"</span>, <span class="st">"No"</span>)) </span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># View the result</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>activity</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a logical column that represents whether a user was active or not</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>activity <span class="ot">&lt;-</span> activity <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">active =</span> <span class="fu">ifelse</span>(total_exercise <span class="sc">&gt;</span> active_avr, <span class="st">"Yes"</span>, <span class="st">"No"</span>)) </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># View first 5 rows</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(activity, <span class="at">n =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 21 × 4
-   user    total_exercise avr_sleep_efc active
-   &lt;chr&gt;            &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt; 
- 1 user_1             420          89.6 Yes   
- 2 user_10            310          75.1 No    
- 3 user_12            365          94.2 Yes   
- 4 user_13            450          76.5 Yes   
- 5 user_14            174          90.8 No    
- 6 user_15            450          89.4 Yes   
- 7 user_16            285          74.3 No    
- 8 user_17            455          86.9 Yes   
- 9 user_18            120          84.4 No    
-10 user_19            285          74.1 No    
-# ℹ 11 more rows</code></pre>
+<pre><code># A tibble: 5 × 4
+  user    total_exercise avr_sleep_efc active
+  &lt;chr&gt;            &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt; 
+1 user_1             420          89.6 Yes   
+2 user_10            310          75.1 No    
+3 user_12            365          94.2 Yes   
+4 user_13            450          76.5 Yes   
+5 user_14            174          90.8 No    </code></pre>
 </div>
 </div>
+<p>The data looks good, so let’s go ahead and create a plot to see if there are any differences between groups.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>activity <span class="sc">|&gt;</span> </span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> active, <span class="at">y =</span> avr_sleep_efc)) <span class="sc">+</span></span>
@@ -478,7 +451,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>From this boxplot, we can see that, in our population, people who exercise more tend to have slightly better sleep efficiency.</p>
+<p>From this boxplot, we can see that, in our population, people who exercise more tend to have slightly better sleep efficiency (percentage of sleep time relative to total time spent in bed).</p>
 </section>
 <section id="calculate-the-observed-statistics" class="level4">
 <h4 data-anchor-id="calculate-the-observed-statistics">Calculate the observed statistics</h4>
@@ -496,7 +469,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 2 Yes           85.6        86.9</code></pre>
 </div>
 </div>
-<p>The statistics above confirm that, on average, people in our population who were active had slightly better sleep efficiency than those who didn’t exercise as much.</p>
+<p>The statistics above confirm that, on average, people in our population who were active had slightly better sleep efficiency (percentage of sleep time relative to total time spent in bed) than those who didn’t exercise as much.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Difference in means and medians</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>activity <span class="sc">|&gt;</span> <span class="fu">group_by</span>(active) <span class="sc">|&gt;</span> </span>
@@ -514,7 +487,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 1     3.41     2.60</code></pre>
 </div>
 </div>
-<p>The difference in mean sleep efficiency between people who exercise more than average and those who do not is 3.4, and the difference in medians is 2.6.</p>
+<p>The difference in mean sleep efficiency between people who exercise more than average and those who do not is 3.4%, and the difference in medians is 2.6%.</p>
 </section>
 <section id="generate-a-null-sampling-distribution." class="level4">
 <h4 data-anchor-id="generate-a-null-sampling-distribution.">Generate a null sampling distribution.</h4>
@@ -540,22 +513,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Test the function</span></span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, perm_data, <span class="at">data =</span> activity) <span class="sc">|&gt;</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, perm_data, <span class="at">data =</span> activity) <span class="sc">|&gt;</span></span>
 <span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 10 × 5
-   obs_avr_diff obs_med_diff perm_avr_diff perm_med_diff   rep
-          &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt; &lt;int&gt;
- 1         3.41         2.60        -3.73        -4.45       1
- 2         3.41         2.60        -2.78        -5.55       2
- 3         3.41         2.60        -0.904       -1.02       3
- 4         3.41         2.60        -4.08        -4.84       4
- 5         3.41         2.60         4.06         3.75       5
- 6         3.41         2.60         1.74         1.07       6
- 7         3.41         2.60         1.22        -0.0200     7
- 8         3.41         2.60        -0.104       -0.955      8
- 9         3.41         2.60        -3.12        -4.84       9
-10         3.41         2.60         1.52         2.29      10</code></pre>
+<pre><code># A tibble: 5 × 5
+  obs_avr_diff obs_med_diff perm_avr_diff perm_med_diff   rep
+         &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt; &lt;int&gt;
+1         3.41         2.60         1.31         2.32       1
+2         3.41         2.60        -3.21        -1.25       2
+3         3.41         2.60         1.98         4.40       3
+4         3.41         2.60         0.728       -0.0200     4
+5         3.41         2.60         1.58         1.10       5</code></pre>
 </div>
 </div>
 </section>
@@ -626,11 +594,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="conclusion" class="level3">
 <h3 data-anchor-id="conclusion">Conclusion</h3>
-<p>In this study, we examined the impact of physical activity on sleep efficiency among 22 healthy young adult males. We categorized participants into active and inactive groups based on their total exercise duration, weighted by activity intensity. Our analysis showed that the active group had a slightly higher average sleep efficiency compared to the inactive group, with a mean difference of 3.4% and a median difference of 2.6%.</p>
+<p>In this study, we examined the impact of physical activity on sleep efficiency among 22 healthy young adult males. We categorized participants into active and inactive groups based on their total exercise duration, weighted by activity intensity. Our analysis showed that the active group had a slightly higher average sleep efficiency compared to the inactive group, with a mean difference of 3.4% and a median difference of 2.6%. This means that people who exercised more than the average slept 0.8% better.</p>
 <p>From these data, the observed differences seem to be consistent with the distribution of differences in the null sampling distribution. There is no evidence to reject the null hypothesis.</p>
 <p>We cannot claim that, in the population, the average sleep efficiency for people who exercise more than the average person is larger than the average sleep efficiency for people who do not exercise more than the average person (p-value = 0.124).</p>
 <p>We cannot claim that, in the population, the median sleep efficiency for people who exercise more than the average person is larger than the median sleep efficiency for people who do not exercise more than the average person (p-value = 0.21).</p>
-<p>Therefore, we conclude that, within this sample, there is no significant evidence to suggest that higher levels of physical activity are associated with improved sleep efficiency. It’s important to note that the small sample size and the homogeneous nature of the participants (all healthy young adult males) may limit the generalizability of these findings. Further research with a larger and more diverse sample may be necessary to fully understand the relationship between physical activity and sleep efficiency.</p>
+<p>Therefore, we conclude that there is not enough evidence to rule out chance. It’s important to note that the small sample size and the homogeneous nature of the participants (all healthy young adult males) may limit the generalizability of these findings. Further research with a larger and more diverse sample may be necessary to fully understand the relationship between physical activity and sleep efficiency.</p>
 </section>
 <section id="reference" class="level3">
 <h3 data-anchor-id="reference">Reference</h3>

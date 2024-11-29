@@ -1,6 +1,6 @@
 ---
 title: "Decoding Wine"
-subtitle: Analyzing Trends in Taste, Price, and Quality
+subtitle: Analyzing Trends in Taste, Price, and Quality 
 author: Vadym Musiienko
 date: September 18, 2024
 format: html
@@ -16,18 +16,29 @@ about:
       href: https://www.kaggle.com/datasets/zynicide/wine-reviews
     - text: Author
       href: https://github.com/zackthoutt
-editor: 
-  markdown: 
-    wrap: 72
 ---
 
-### Import Libraries and Data
+### Introduction
+
+The world of wine is rich with complexity, offering a diverse range of flavors,
+prices, and qualities. In this project we will analyze trends in wine 
+characteristics by examining a [Kaggle dataset](https://www.kaggle.com/datasets/zynicide/wine-reviews) of over 150,000 wine reviews. 
+Through this exploration, we aim to uncover insights about the relationship 
+between price, quality, and the descriptive notes used by wine experts. 
+By analyzing factors such as the average price of wine by country, the 
+correlation between price and ratings, and the impact of specific flavor notes
+on wine quality, this project seeks to provide a comprehensive view of what 
+influences wine preferences and how they correlate to market values.
+
+
+### Analisys
+
+#### Import Libraries and Data
 
 The tidyverse package is used for data visualization, while ggrepel adds
 functionality for labeling text on plots.
 
 ```{r}
-# Load the libraries
 library(tidyverse)
 library(ggrepel)
 
@@ -35,22 +46,22 @@ library(ggrepel)
 wine_data <- read_csv("data/winemag-data_first150k.csv")
 ```
 
-### Inspect the Dataset
+#### Inspect the Dataset
 
 Let's take a look at the first 10 records.
 
 ```{r}
-slice_head(wine_data, n = 10)
+head(wine_data, n = 10)
 ```
 
-### Clean the Data:
+#### Clean the Data
 
 From inspecting the dataset, it appears that the country variable is of
-type <chr>, but I want it to be <fct> (a factor) so that it can be
-ordered. Additionally, I will be analyzing the price and rating (points)
-of the wine, so I want to remove any rows where these variables contain
-missing (NA) values. Finally, my analysis will not include regions and
-wineries, so I will exclude those columns.
+type <chr>, but we want it to be <fct> (a factor) so that it can be
+ordered. Additionally, we will be analyzing the price and rating (points)
+of the wine, so we want to remove any rows where these variables contain
+missing (NA) values. Finally, this analysis will not include regions and
+wineries, so we will exclude those columns.
 
 ```{r}
 # Clean up the data
@@ -59,7 +70,6 @@ wine_data <- wine_data |> filter(!(is.na(price) | is.na(country))) |>
   select(-c(region_1, region_2, winery))
 ```
 
-### Analisys
 
 #### Average price by country
 
@@ -84,11 +94,7 @@ wine_data |>
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-The countries that produce the most expensive wines are the US, France,
-England, Hungary, and Luxembourg, with average prices ranging from 40 to
-50 USD. On the other hand, the cheapest wine producers are Montenegro,
-Lithuania, Bulgaria, Bosnia, and Ukraine, where wines typically cost
-between 10 and 15 USD.
+*The countries that produce the most expensive wines are the US, France, England, Hungary, and Luxembourg, with average prices ranging from 40 to 50 USD. On the other hand, the cheapest wine producers are Montenegro, Lithuania, Bulgaria, Bosnia, and Ukraine, where wines typically cost between 10 and 15 USD.*
 
 #### Correlation between Price and Quality
 
@@ -113,16 +119,12 @@ wine_data |>
   theme_minimal()
 ```
 
-There is definitely a correlation between price and rating, with more
-expensive wines tending to have higher ratings. However, the
-relationship is stronger in the 0 to 100 USD range, where price
-significantly impacts quality. Beyond 100 USD, wines are fairly similar
-in quality, with higher prices offering only a slight improvement.
+*There is definitely a correlation between price and rating, with more expensive wines tending to have higher ratings. However, the relationship is stronger in the 0 to 100 USD range, where price significantly impacts quality. Beyond 100 USD, wines are fairly similar in quality, with higher prices offering only a slight improvement.*
 
 #### Flavor notes affect on price and quality
 
 Wine can have a wide variety of flavors, described using different
-flavor notes. To determine which flavor notes are the most desirable, I
+flavor notes. To determine which flavor notes are the most desirable, we
 identified 24 of the most commonly used adjectives to describe wine
 flavors. You can find the article with this information
 [here](https://www.masterclass.com/articles/wine-descriptions).
@@ -192,17 +194,11 @@ wine_with_adj |> group_by(adjective) |>
   theme_minimal()
 ```
 
-The clear winner among the flavor notes is "opulent," which is often
-associated with the most sophisticated wines. Opulent wines not only
-have the highest prices but also receive the best ratings. Close
-contenders are "velvety" and "astringent." Both velvety and astringent
-wines are also quite expensive, with velvety wines having higher
-ratings. In contrast, the cheapest and lowest-quality wines are
-described as "musty," "flabby," and "vegetal."
+*The clear winner among the flavor notes is "opulent," which is often associated with the most sophisticated wines. Opulent wines not only have the highest prices but also receive the best ratings. Close contenders are "velvety" and "astringent." Both velvety and astringent wines are also quite expensive, with velvety wines having higher ratings. In contrast, the cheapest and lowest-quality wines are described as "musty," "flabby," and "vegetal."*
 
 #### Berry notes
 
-While reviewing the descriptions, I noticed that wine is often described
+While reviewing the descriptions, we noticed that wine is often described
 as having various berry flavor notes. Let's conduct a similar analysis
 to determine which berry flavor is considered the most "expensive."
 
@@ -244,6 +240,8 @@ berries |>
   theme(axis.text.x = element_blank())
 ```
 
-Wines with blackberry flavor tend to be the most expensive, with an
-average price of around \$42. In contrast, strawberry-flavored wines are
-the cheapest, averaging \$32.
+*Wines with blackberry flavor tend to be the most expensive, with an average price of around \$42. In contrast, strawberry-flavored wines are the cheapest, averaging \$32.*
+
+### Conclusion
+
+This project explored the relationships between wine characteristics, including price, quality, and flavor notes, based on a dataset of over 150,000 wine reviews. By examining the average price of wine by country, we uncovered interesting trends in global wine pricing. We also explored the correlation between price and quality, revealing that while more expensive wines tend to have higher ratings, the relationship is less pronounced at higher price points. Further, our analysis of flavor notes showed that descriptors like "opulent," "velvety," and "astringent" are linked to higher-priced and higher-rated wines, while terms like "musty" and "flabby" correlate with lower-quality wines. Additionally, berry flavor notes such as "blackberry" were associated with the most expensive wines. Overall, this exploration provides a comprehensive look at the factors that influence wine preferences and their market value, offering useful insights for both wine enthusiasts and producers.
