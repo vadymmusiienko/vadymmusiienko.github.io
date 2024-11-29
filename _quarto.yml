@@ -6,18 +6,23 @@ website:
   title: "Vadym Musiienko"
   navbar:
     right:
-      - text: "Home"
-        href: index.qmd
-      - text: "My Projects"
+      - text: "Data Science"
         menu: 
-         - text: "Wine Analysis"
+         - text: "Wine Reviews"
            href: wine.html
          - text: "Acoustic Absorbance"
            href: WAI.html
-         - text: "Sleep Science"
+         - text: "Sleep Quality"
            href: sleep.html
          - text: "TidyTuesday Projects"
            href: mini.html
+      - text: "Other"
+        menu: 
+          - text: "Motivational Coach"
+            href: https://www.motivational-coach.com/
+    tools:
+      - icon: github
+        href: https://github.com/vadymmusiienko/vadymmusiienko.github.io
 format:
   html:
     theme:
