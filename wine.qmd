@@ -1,6 +1,6 @@
 ---
-title: "Wine Review"
-subtitle: Analysis of Wine Review Data from [Kaggle](https://www.kaggle.com/datasets/zynicide/wine-reviews)
+title: "Decoding Wine"
+subtitle: Analyzing Trends in Taste, Price, and Quality
 author: Vadym Musiienko
 date: September 18, 2024
 format: html
@@ -16,12 +16,14 @@ about:
       href: https://www.kaggle.com/datasets/zynicide/wine-reviews
     - text: Author
       href: https://github.com/zackthoutt
-
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 ### Import Libraries and Data
 
-The tidyverse package is used for data visualization, while ggrepel adds 
+The tidyverse package is used for data visualization, while ggrepel adds
 functionality for labeling text on plots.
 
 ```{r}
@@ -37,19 +39,18 @@ wine_data <- read_csv("data/winemag-data_first150k.csv")
 
 Let's take a look at the first 10 records.
 
-
 ```{r}
 slice_head(wine_data, n = 10)
 ```
 
-
 ### Clean the Data:
 
-From inspecting the dataset, it appears that the country variable is of type <chr>,
-but I want it to be <fct> (a factor) so that it can be ordered. Additionally, I
-will be analyzing the price and rating (points) of the wine, so I want to remove
-any rows where these variables contain missing (NA) values. Finally, my analysis
-will not include regions and wineries, so I will exclude those columns.
+From inspecting the dataset, it appears that the country variable is of
+type <chr>, but I want it to be <fct> (a factor) so that it can be
+ordered. Additionally, I will be analyzing the price and rating (points)
+of the wine, so I want to remove any rows where these variables contain
+missing (NA) values. Finally, my analysis will not include regions and
+wineries, so I will exclude those columns.
 
 ```{r}
 # Clean up the data
@@ -62,10 +63,10 @@ wine_data <- wine_data |> filter(!(is.na(price) | is.na(country))) |>
 
 #### Average price by country
 
-One of the first interesting insights would be to determine which countries 
-produce the most expensive and the cheapest wines. To find this out, let's 
-create a plot showing the average wine prices for each country in the dataset.
-
+One of the first interesting insights would be to determine which
+countries produce the most expensive and the cheapest wines. To find
+this out, let's create a plot showing the average wine prices for each
+country in the dataset.
 
 ```{r}
 wine_data |> 
@@ -83,17 +84,18 @@ wine_data |>
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-The countries that produce the most expensive wines are the US, France, England,
-Hungary, and Luxembourg, with average prices ranging from 40 to 50 USD. On the
-other hand, the cheapest wine producers are Montenegro, Lithuania, Bulgaria, 
-Bosnia, and Ukraine, where wines typically cost between 10 and 15 USD.
+The countries that produce the most expensive wines are the US, France,
+England, Hungary, and Luxembourg, with average prices ranging from 40 to
+50 USD. On the other hand, the cheapest wine producers are Montenegro,
+Lithuania, Bulgaria, Bosnia, and Ukraine, where wines typically cost
+between 10 and 15 USD.
 
 #### Correlation between Price and Quality
 
-Another interesting question to explore is the correlation between price and
-quality. Are more expensive wines actually better than cheaper ones?
-To find out, let's visualize the relationship between prices and ratings (points).
-
+Another interesting question to explore is the correlation between price
+and quality. Are more expensive wines actually better than cheaper ones?
+To find out, let's visualize the relationship between prices and ratings
+(points).
 
 ```{r}
 wine_data |>
@@ -111,26 +113,24 @@ wine_data |>
   theme_minimal()
 ```
 
-
-There is definitely a correlation between price and rating, with more expensive
-wines tending to have higher ratings. However, the relationship is stronger in 
-the 0 to 100 USD range, where price significantly impacts quality. Beyond 100
-USD, wines are fairly similar in quality, with higher prices offering only a 
-slight improvement.
+There is definitely a correlation between price and rating, with more
+expensive wines tending to have higher ratings. However, the
+relationship is stronger in the 0 to 100 USD range, where price
+significantly impacts quality. Beyond 100 USD, wines are fairly similar
+in quality, with higher prices offering only a slight improvement.
 
 #### Flavor notes affect on price and quality
 
-Wine can have a wide variety of flavors, described using different flavor notes.
-To determine which flavor notes are the most desirable, I identified 24 of the 
-most commonly used adjectives to describe wine flavors. You can find the article 
-with this information
+Wine can have a wide variety of flavors, described using different
+flavor notes. To determine which flavor notes are the most desirable, I
+identified 24 of the most commonly used adjectives to describe wine
+flavors. You can find the article with this information
 [here](https://www.masterclass.com/articles/wine-descriptions).
 
-
-First, let's see if these adjectives are actually used in the wine reviews 
-and which ones are more common than others. We'll plot the frequency of each
-adjective mentioned in the description section of the reviews.
-
+First, let's see if these adjectives are actually used in the wine
+reviews and which ones are more common than others. We'll plot the
+frequency of each adjective mentioned in the description section of the
+reviews.
 
 ```{r}
 # Create a vector with the adjectives
@@ -164,15 +164,15 @@ wine_with_adj |> group_by(adjective) |>
   theme_minimal()
 ```
 
-We can see that most of these adjectives are widely used among wine experts. 
-"Fruity," "Spicy," "Tannic," and "Juicy" appear in over 5,000 reviews, making
-them very common. On the other hand, adjectives like "Musty," "Flabby," and 
-"Fruit-forward" are relatively rare.
+We can see that most of these adjectives are widely used among wine
+experts. "Fruity," "Spicy," "Tannic," and "Juicy" appear in over 5,000
+reviews, making them very common. On the other hand, adjectives like
+"Musty," "Flabby," and "Fruit-forward" are relatively rare.
 
-
-Now that we know wine experts frequently use these words, let's explore which
-flavor notes are associated with more sophisticated wines. To visualize this,
-we'll plot the average price and rating for each adjective.
+Now that we know wine experts frequently use these words, let's explore
+which flavor notes are associated with more sophisticated wines. To
+visualize this, we'll plot the average price and rating for each
+adjective.
 
 ```{r}
 # Plot average price and rating depending on a flavor note
@@ -192,22 +192,22 @@ wine_with_adj |> group_by(adjective) |>
   theme_minimal()
 ```
 
-
-The clear winner among the flavor notes is "opulent," which is often associated
-with the most sophisticated wines. Opulent wines not only have the highest 
-prices but also receive the best ratings. Close contenders are "velvety" and 
-"astringent." Both velvety and astringent wines are also quite expensive, with 
-velvety wines having higher ratings. In contrast, the cheapest and lowest-quality
-wines are described as "musty," "flabby," and "vegetal."
+The clear winner among the flavor notes is "opulent," which is often
+associated with the most sophisticated wines. Opulent wines not only
+have the highest prices but also receive the best ratings. Close
+contenders are "velvety" and "astringent." Both velvety and astringent
+wines are also quite expensive, with velvety wines having higher
+ratings. In contrast, the cheapest and lowest-quality wines are
+described as "musty," "flabby," and "vegetal."
 
 #### Berry notes
 
-While reviewing the descriptions, I noticed that wine is often described as 
-having various berry flavor notes. Let's conduct a similar analysis to determine
-which berry flavor is considered the most "expensive."
+While reviewing the descriptions, I noticed that wine is often described
+as having various berry flavor notes. Let's conduct a similar analysis
+to determine which berry flavor is considered the most "expensive."
 
-
-The regular expression I used for matching berries is: (?i)\\b\\w+erry\\b.
+The regular expression I used for matching berries is:
+(?i)\\b\\w+erry\\b.
 
 ```{r}
 # A data frame with wines that were described with some berry
@@ -244,8 +244,6 @@ berries |>
   theme(axis.text.x = element_blank())
 ```
 
-Wines with blackberry flavor tend to be the most expensive, with an average 
-price of around $42. In contrast, strawberry-flavored wines are the cheapest, 
-averaging $32.
-
-
+Wines with blackberry flavor tend to be the most expensive, with an
+average price of around \$42. In contrast, strawberry-flavored wines are
+the cheapest, averaging \$32.

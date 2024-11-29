@@ -1,6 +1,6 @@
 ---
-title: "WAI"
-subtitle: Wideband Acoustic Immittance
+title: "Wideband Acoustic Immittance"
+subtitle: Exploring the WAI Database
 author: Vadym Musiienko
 date: November 24, 2024
 format: html
@@ -14,17 +14,28 @@ about:
   links:
     - text: Wideband Acoustic Immittance (WAI) Database
       href: https://www.science.smith.edu/wai-database/
-
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 ### Introduction
 
-This analysis explores the Wideband Acoustic Immittance (WAI) Database hosted by Smith College. The database contains measurements of acoustic properties in human ears, including absorbance, power reflectance, impedance, and other related quantities. Implemented in MySQL, this online database serves as a repository for normative adult WAI measures, facilitating data sharing and analysis across different research studies. The database is publicly accessible [here](http://www.science.smith.edu/wai-database/).
+This analysis explores the Wideband Acoustic Immittance (WAI) Database
+hosted by Smith College. The database contains measurements of acoustic
+properties in human ears, including absorbance, power reflectance,
+impedance, and other related quantities. Implemented in MySQL, this
+online database serves as a repository for normative adult WAI measures,
+facilitating data sharing and analysis across different research
+studies. The database is publicly accessible
+[here](http://www.science.smith.edu/wai-database/).
 
 The analysis has two primary objectives:
 
-1. Reproduce Figure 1 from Voss (2020), which illustrates mean absorbances across various studies
-2. Visualize WAI mean absorbance across various studies for male and female participats.
+1.  Reproduce Figure 1 from Voss (2020), which illustrates mean
+    absorbances across various studies
+2.  Visualize WAI mean absorbance across various studies for male and
+    female participats.
 
 #### Load Necessary Libraries
 
@@ -47,14 +58,16 @@ con_wai <- dbConnect(
 ### Data exploration
 
 #### Data base structure
+
 ```{sql}
 #| connection: con_wai
 
 SHOW TABLES;
 ```
 
-The WAI database consists of 7 tables, but our analysis will focus on the three
-most relevant and up-to-date tables: Measurements, PI_Info, and Subjects.
+The WAI database consists of 7 tables, but our analysis will focus on
+the three most relevant and up-to-date tables: Measurements, PI_Info,
+and Subjects.
 
 #### Measurements table
 
@@ -67,11 +80,13 @@ LIMIT 0, 5;
 ```
 
 The Measurements table contains the core data of our analysis, including
-publication identifiers, instrument information, and most importantly, frequency
-and absorbance measurements. This table links to PI_Info through the Identifier 
-column and to Subjects through the SubjectNumber column.
+publication identifiers, instrument information, and most importantly,
+frequency and absorbance measurements. This table links to PI_Info
+through the Identifier column and to Subjects through the SubjectNumber
+column.
 
 #### PI_Info table
+
 ```{sql}
 #| connection: con_wai
 
@@ -79,10 +94,12 @@ SELECT Identifier, Year, Authors, AuthorsShortList
 FROM PI_Info 
 LIMIT 0, 5;
 ```
-The PI_Info table provides metadata about each publication, including author
-information and publication year.
+
+The PI_Info table provides metadata about each publication, including
+author information and publication year.
 
 #### Subjects table
+
 ```{sql}
 #| connection: con_wai
 
@@ -91,34 +108,35 @@ FROM Subjects
 LIMIT 0, 5;
 ```
 
-The Subjects table contains demographic information about study participants, 
-including ethnicity, sex, and other relevant characteristics.
-
+The Subjects table contains demographic information about study
+participants, including ethnicity, sex, and other relevant
+characteristics.
 
 ### Part 1: Reproducing Voss (2020) Figure 1
 
-To recreate Figure 1 from 
-[Voss (2020)](https://pmc.ncbi.nlm.nih.gov/articles/PMC7093226/),
-we first need to identify the 
-publications included in the original figure. Let's examine the available
-identifiers in the database.
+To recreate Figure 1 from [Voss
+(2020)](https://pmc.ncbi.nlm.nih.gov/articles/PMC7093226/), we first
+need to identify the publications included in the original figure. Let's
+examine the available identifiers in the database.
 
 #### Unique identifiers
+
 ```{sql}
 #| connection: con_wai
 
 SELECT DISTINCT(Identifier) FROM Measurements;
 ```
 
-After reviewing the list of Identifiers, I identified the following publications
-used in Voss (2020): Abur_2014, Feeney_2017, Groon_2015, Lewis_2015, Liu_2008,
-Rosowski_2012, Shahnaz_2006, Shaver_2013, Sun_2016, Voss_1994, Voss_2010,and Werner_2010.
+After reviewing the list of Identifiers, I identified the following
+publications used in Voss (2020): Abur_2014, Feeney_2017, Groon_2015,
+Lewis_2015, Liu_2008, Rosowski_2012, Shahnaz_2006, Shaver_2013,
+Sun_2016, Voss_1994, Voss_2010,and Werner_2010.
 
 #### Data acquisition
 
-To recreate the figure, we need to calculate average absorbance values across
-frequencies for each publication. The legend requires additional publication
-information retrieved from the PI_Info table.
+To recreate the figure, we need to calculate average absorbance values
+across frequencies for each publication. The legend requires additional
+publication information retrieved from the PI_Info table.
 
 Query:
 
@@ -140,11 +158,10 @@ WHERE m.Identifier IN
 GROUP BY Frequency, m.Identifier, pi.Year, m.Instrument
 ```
 
-
 #### Custom theme
 
-We designed a custom theme for the plot to align with the style of the original figure.
-
+We designed a custom theme for the plot to align with the style of the
+original figure.
 
 ```{r}
 custom_theme <- theme(
@@ -217,20 +234,25 @@ figure_data |>
   custom_theme
 
 ```
+
 Voss (2020) describes the figure as follows:
 
-"Mean absorbances for the 12 studies within the WAI database as of July 1, 2019. The legend includes peer-reviewed publications, the number of individual ears, and the equipment used in the studies. For ears with multiple measurements, the average was used. The figure includes all ears in the database, without controlling for the number of ears from each subject."
-
+"Mean absorbances for the 12 studies within the WAI database as of July
+1, 2019. The legend includes peer-reviewed publications, the number of
+individual ears, and the equipment used in the studies. For ears with
+multiple measurements, the average was used. The figure includes all
+ears in the database, without controlling for the number of ears from
+each subject."
 
 ### Analyze mean absorbance for male and female
 
 #### Data acquisition
 
-This analysis aims to determine whether there is a difference in mean absorbance
-between male and female participants. As in the previous analysis, we use the 
-same set of publications. Participant sex information is retrieved from the 
-Subjects table, which is joined with the Measurements table to link absorbance 
-data with demographic details.
+This analysis aims to determine whether there is a difference in mean
+absorbance between male and female participants. As in the previous
+analysis, we use the same set of publications. Participant sex
+information is retrieved from the Subjects table, which is joined with
+the Measurements table to link absorbance data with demographic details.
 
 Query:
 
@@ -254,10 +276,10 @@ AND Sex != 'Unknown'
 GROUP BY Frequency, s.Sex, m.Identifier
 ```
 
-
 #### Visualization
 
-The following R code generates the visualization to compare mean absorbance between male and female participants:
+The following R code generates the visualization to compare mean
+absorbance between male and female participants:
 
 ```{r}
 # Graph the data
@@ -293,8 +315,10 @@ wai_sex |>
   custom_theme
 ```
 
-This plot reveals that female participants exhibit higher absorbance than males around the 800 Hz frequency range. However, the difference diminishes below 800 Hz and beyond 5000 Hz, where absorbance levels for both sexes are nearly identical.
-
+This plot reveals that female participants exhibit higher absorbance
+than males around the 800 Hz frequency range. However, the difference
+diminishes below 800 Hz and beyond 5000 Hz, where absorbance levels for
+both sexes are nearly identical.
 
 #### Disconnect from the Database
 
@@ -302,4 +326,3 @@ This plot reveals that female participants exhibit higher absorbance than males 
 # Disconnect from the database
 dbDisconnect(con_wai, shutdown = TRUE)
 ```
-

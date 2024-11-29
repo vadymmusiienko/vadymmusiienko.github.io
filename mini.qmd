@@ -1,0 +1,99 @@
+---
+title: "Mini-projects"
+subtitle: Visualization of data from  [TidyTuesday](https://github.com/rfordatascience/tidytuesday/)
+author: Vadym Musiienko
+date: September 18, 2024
+format: html
+execute: 
+  warning: false
+  message: false
+image: "media/mini.jpg"
+about: 
+  template: marquee
+  links:
+    - text: TidyTuesday
+      href: https://github.com/rfordatascience/tidytuesday/
+---
+
+### 1. Ukrainian Refugees
+##### Analysis of [Refugees Data](https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-08-22)
+
+*Plot top 5 countries with most Ukrainian refugees.*
+
+```{r}
+library(tidyverse)
+
+# Load the data
+tuesdata <- tidytuesdayR::tt_load('2023-08-22')
+
+# Get a dataframe
+population <- tuesdata$population
+
+# Wrangle and visualize
+population |>
+  filter(coo == "UKR", year >= 2022) |>
+  group_by(coa_name) |>
+  summarize(total_refugees = sum(refugees, na.rm = TRUE)) |>
+  arrange(desc(total_refugees)) |>
+  slice_head(n = 5) |>
+  mutate(country = recode(coa_name, "Czechia" = "Czech Republic",
+                           "Russian Federation" = "Russia",
+                           "United Kingdom of Great Britain and Northern Ireland"
+                           = "UK")) |>
+  ggplot(aes(fct_reorder(country, total_refugees), total_refugees, fill = country)) +
+  geom_col(width = 0.7) +
+  scale_y_continuous(labels = scales::comma_format()) +
+   labs(
+    title = "Top 5 Countries with Most Ukrainian Refugees",
+    x = NULL,
+    y = "Total Refugees",
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5))
+```
+
+*This bar chart displays the top 5 countries hosting the most Ukrainian refugees (since the beginning of the full-scale invasion).The y-axis represents the total number of refugees, with Russia hosting the highest number, exceeding a million. Germany and Poland follow closely with almost a million refugees each, while the Czech Republic has just under 500,000. The UK has the fewest refugees among the five countries, with less than 250,000.*
+
+**Key observations:**
+
+The significant difference in the number of Ukrainian refugees in Russia compared to other countries is striking, prompting the question: why are people fleeing the war to the very aggressor? This is primarily because Russian forces in occupied Ukrainian territories forcibly deporting people to Russia, labeling them as "refugees" and leaving them with no other option. In contrast, Poland and Germany are popular destinations for Ukrainian refugees, likely due to their proximity and strong support.
+
+
+### 2. Gender Trends at the International Mathematical Olympiad
+#### Analysis of [International Mathematical Olympiad (IMO) Data](https://github.com/rfordatascience/tidytuesday/tree/master/data/2024/2024-09-24)
+*Plot total male and female contestants*
+
+```{r}
+library(tidyverse)
+
+# Load the data
+tuesdata <- tidytuesdayR::tt_load('2024-09-24')
+
+# Get a dataframe
+timeline_df <- tuesdata$timeline_df
+
+# Wrangle and visualize
+timeline_df |> 
+  group_by(year) |>
+  summarize(Female = sum(female_contestant, na.rm = TRUE),
+            Male = sum(male_contestant, na.rm = TRUE)) |>
+  pivot_longer(cols = c(Female, Male), 
+               names_to = "gender", 
+               values_to = "total") |>
+  ggplot(aes(x = year, y = total, color = gender)) +
+  geom_line(linewidth = 1.2) +
+  labs(title = "Total Male and Female IMO Contestants Over Time",
+       x = NULL,
+       y = "Total Contestants",
+       color = "Gender") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+  
+```
+
+*This plot shows the total number of male and female contestants in the International Mathematical Olympiad (IMO) over time, from the 1950s to the 2020s. The blue line represents the number of male participants, and the red line represents the number of female participants.*
+
+**Key observations:**
+
+The number of male contestants has increased dramatically over time, particularly from the 1980s onward, reaching over 400 participants in recent years.The number of female contestants, while also increasing slightly over time, remains significantly lower compared to male contestants.There is a noticeable gender disparity, with male contestants consistently outnumbering female contestants throughout the entire period.The plot highlights a persistent gender gap in participation, despite the overall growth in the number of contestants.

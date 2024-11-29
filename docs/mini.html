@@ -9,7 +9,7 @@
 <meta name="author" content="Vadym Musiienko">
 <meta name="dcterms.date" content="2024-09-18">
 
-<title>International Mathematical Olympiad – Vadym Musiienko</title>
+<title>Mini-projects – Vadym Musiienko</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -96,29 +130,26 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-data-viz" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Data Viz</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-my-projects" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">My Projects</span>
     </a>
-    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-data-viz">    
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-my-projects">    
+        <li>
+    <a class="dropdown-item" href="./wine.html">
+ <span class="dropdown-text">Wine Analysis</span></a>
+  </li>  
         <li>
     <a class="dropdown-item" href="./WAI.html">
- <span class="dropdown-text">WAI</span></a>
+ <span class="dropdown-text">Acoustic Absorbance</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./sleep.html">
- <span class="dropdown-text">Sleep quality</span></a>
+ <span class="dropdown-text">Sleep Science</span></a>
   </li>  
+        <li class="dropdown-header">TidyTuesday Projects</li>
         <li>
-    <a class="dropdown-item" href="./wine.html">
- <span class="dropdown-text">Wine reviews</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./imo.html">
- <span class="dropdown-text">International Mathematical Olympiad</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./refugees.html">
- <span class="dropdown-text">Refugees</span></a>
+    <a class="dropdown-item" href="./mini.html">
+ <span class="dropdown-text"></span></a>
   </li>  
     </ul>
   </li>
@@ -134,18 +165,27 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+  <ul>
+  <li><a href="#ukrainian-refugees" id="toc-ukrainian-refugees" class="nav-link active" data-scroll-target="#ukrainian-refugees">1. Ukrainian Refugees</a></li>
+  <li><a href="#gender-trends-at-the-international-mathematical-olympiad" id="toc-gender-trends-at-the-international-mathematical-olympiad" class="nav-link" data-scroll-target="#gender-trends-at-the-international-mathematical-olympiad">2. Gender Trends at the International Mathematical Olympiad</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<div class="quarto-about-marquee column-page">
+<div class="quarto-about-marquee column-page-left">
   <div class="about-image-container">
+    <img src="media/mini.jpg" class="about-image " style="width: 100%;">
   </div>
   <div class="about-contents">
     <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">International Mathematical Olympiad</h1>
-<p class="subtitle lead">Analysis of International Mathematical Olympiad (IMO) Data from <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2024/2024-09-24">TidyTuesday</a></p>
+<h1 class="title">Mini-projects</h1>
+<p class="subtitle lead">Visualization of data from <a href="https://github.com/rfordatascience/tidytuesday/">TidyTuesday</a></p>
 </div>
-<div class="quarto-title-meta column-page">
+<div class="quarto-title-meta column-page-left">
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
@@ -159,12 +199,91 @@ ul.task-list li input[type="checkbox"] {
     </div>
   </div>
   </div>
-</header> <main class="content column-page" id="quarto-document-content">
+</header> <main class="content column-page-left" id="quarto-document-content">
+
+<section id="ukrainian-refugees" class="level3">
+<h3 data-anchor-id="ukrainian-refugees">1. Ukrainian Refugees</h3>
+<section id="analysis-of-refugees-data" class="level5">
+<h5 data-anchor-id="analysis-of-refugees-data">Analysis of <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-08-22">Refugees Data</a></h5>
+<p><em>Plot top 5 countries with most Ukrainian refugees.</em></p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>tuesdata <span class="ot">&lt;-</span> tidytuesdayR<span class="sc">::</span><span class="fu">tt_load</span>(<span class="st">'2023-08-22'</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Get a dataframe</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>population <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>population</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Wrangle and visualize</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>population <span class="sc">|&gt;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(coo <span class="sc">==</span> <span class="st">"UKR"</span>, year <span class="sc">&gt;=</span> <span class="dv">2022</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(coa_name) <span class="sc">|&gt;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_refugees =</span> <span class="fu">sum</span>(refugees, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(total_refugees)) <span class="sc">|&gt;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">5</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">country =</span> <span class="fu">recode</span>(coa_name, <span class="st">"Czechia"</span> <span class="ot">=</span> <span class="st">"Czech Republic"</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"Russian Federation"</span> <span class="ot">=</span> <span class="st">"Russia"</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"United Kingdom of Great Britain and Northern Ireland"</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                           <span class="ot">=</span> <span class="st">"UK"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="fu">fct_reorder</span>(country, total_refugees), total_refugees, <span class="at">fill =</span> country)) <span class="sc">+</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>()) <span class="sc">+</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>   <span class="fu">labs</span>(</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Top 5 Countries with Most Ukrainian Refugees"</span>,</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Total Refugees"</span>,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="imo_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="mini_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>This bar chart displays the top 5 countries hosting the most Ukrainian refugees (since the beginning of the full-scale invasion).The y-axis represents the total number of refugees, with Russia hosting the highest number, exceeding a million. Germany and Poland follow closely with almost a million refugees each, while the Czech Republic has just under 500,000. The UK has the fewest refugees among the five countries, with less than 250,000.</em></p>
+<p><strong>Key observations:</strong></p>
+<p>The significant difference in the number of Ukrainian refugees in Russia compared to other countries is striking, prompting the question: why are people fleeing the war to the very aggressor? This is primarily because Russian forces in occupied Ukrainian territories forcibly deporting people to Russia, labeling them as “refugees” and leaving them with no other option. In contrast, Poland and Germany are popular destinations for Ukrainian refugees, likely due to their proximity and strong support.</p>
+</section>
+</section>
+<section id="gender-trends-at-the-international-mathematical-olympiad" class="level3">
+<h3 data-anchor-id="gender-trends-at-the-international-mathematical-olympiad">2. Gender Trends at the International Mathematical Olympiad</h3>
+<section id="analysis-of-international-mathematical-olympiad-imo-data" class="level4">
+<h4 data-anchor-id="analysis-of-international-mathematical-olympiad-imo-data">Analysis of <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2024/2024-09-24">International Mathematical Olympiad (IMO) Data</a></h4>
+<p><em>Plot total male and female contestants</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>tuesdata <span class="ot">&lt;-</span> tidytuesdayR<span class="sc">::</span><span class="fu">tt_load</span>(<span class="st">'2024-09-24'</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Get a dataframe</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>timeline_df <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>timeline_df</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Wrangle and visualize</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>timeline_df <span class="sc">|&gt;</span> </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">Female =</span> <span class="fu">sum</span>(female_contestant, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">Male =</span> <span class="fu">sum</span>(male_contestant, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(Female, Male), </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"gender"</span>, </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"total"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> total, <span class="at">color =</span> gender)) <span class="sc">+</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Total Male and Female IMO Contestants Over Time"</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Total Contestants"</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Gender"</span>) <span class="sc">+</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mini_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -174,13 +293,12 @@ ul.task-list li input[type="checkbox"] {
 <p>The number of male contestants has increased dramatically over time, particularly from the 1980s onward, reaching over 400 participants in recent years.The number of female contestants, while also increasing slightly over time, remains significantly lower compared to male contestants.There is a noticeable gender disparity, with male contestants consistently outnumbering female contestants throughout the entire period.The plot highlights a persistent gender gap in participation, despite the overall growth in the number of contestants.</p>
 
 
+</section>
+</section>
 </main> 
     <div class="about-footer"><div class="about-links">
-  <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2024/2024-09-24" class="about-link" rel="" target="">
+  <a href="https://github.com/rfordatascience/tidytuesday/" class="about-link" rel="" target="">
      <span class="about-link-text">TidyTuesday</span>
-  </a>
-  <a href="https://github.com/havishak" class="about-link" rel="" target="">
-     <span class="about-link-text">Author</span>
   </a>
 </div>
 </div>

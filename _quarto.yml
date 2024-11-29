@@ -8,18 +8,16 @@ website:
     right:
       - text: "Home"
         href: index.qmd
-      - text: "Data Viz"
+      - text: "My Projects"
         menu: 
-         - text: "WAI"
-           href: WAI.html
-         - text: "Sleep quality"
-           href: sleep.html
-         - text: "Wine reviews"
+         - text: "Wine Analysis"
            href: wine.html
-         - text: "International Mathematical Olympiad"
-           href: imo.html
-         - text: "Refugees"
-           href: refugees.html
+         - text: "Acoustic Absorbance"
+           href: WAI.html
+         - text: "Sleep Science"
+           href: sleep.html
+         - text: "TidyTuesday Projects"
+         - href: mini.html
 format:
   html:
     theme:
