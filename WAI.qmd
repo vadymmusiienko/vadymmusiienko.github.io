@@ -1,6 +1,6 @@
 ---
 title: "Wideband Acoustic Immittance"
-subtitle: Exploring the WAI Database
+subtitle: Exploring the [WAI](https://www.science.smith.edu/wai-database/) Database
 author: Vadym Musiienko
 date: November 24, 2024
 format: html
@@ -35,9 +35,9 @@ The analysis has two primary objectives:
 1.  Reproduce Figure 1 from Voss (2020), which illustrates mean
     absorbances across various studies
 2.  Visualize WAI mean absorbance across various studies for male and
-    female participats.
+    female participats
 
-#### Load Necessary Libraries
+#### Import Libraries
 
 ```{r}
 library(tidyverse)
@@ -55,7 +55,10 @@ con_wai <- dbConnect(
 )
 ```
 
-### Data exploration
+## Data
+
+Firstly, we need to understand the structure of the SQL database,
+including its tables and the variables within them.
 
 #### Data base structure
 
@@ -244,15 +247,17 @@ multiple measurements, the average was used. The figure includes all
 ears in the database, without controlling for the number of ears from
 each subject."
 
-### Analyze mean absorbance for male and female
-
-#### Data acquisition
+### Part 2: Mean absorbance for males and females
 
 This analysis aims to determine whether there is a difference in mean
 absorbance between male and female participants. As in the previous
-analysis, we use the same set of publications. Participant sex
-information is retrieved from the Subjects table, which is joined with
-the Measurements table to link absorbance data with demographic details.
+analysis, we use the same set of publications.
+
+#### Data acquisition
+
+Participant sex information is retrieved from the Subjects table, which
+is joined with the Measurements table to link absorbance data with each
+subject's personal information.
 
 Query:
 
@@ -322,7 +327,36 @@ both sexes are nearly identical.
 
 #### Disconnect from the Database
 
+The last step is to disconnetc from the database.
+
 ```{r}
 # Disconnect from the database
 dbDisconnect(con_wai, shutdown = TRUE)
 ```
+
+### Acknowledgments
+
+The normative WAI database and corresponding website are funded by the
+National Institutes of Health, NIDCD (R15 DC014129). The server is
+hosted at Smith College.
+
+#### Citation
+
+The DOI of this project is: [doi.org/10.35482/egr.001.2022](https://doi.org/10.35482/egr.001.2022)
+
+Contributors to this work include:
+
+-   Dr. Susan E. Voss, Picker Engineering Program, Smith College
+-   Dr. Nicholas J. Horton, Professor of Statistics and Data Science,
+    Amherst College
+-   Dr. Benjamin Baumer, Statistical and Data Sciences, Smith College
+-   Suzanne Palmer Computing and Technical Services (CATS), Smith
+    College
+-   Melinda Pontes ’15 Picker Engineering Program, Smith College
+-   Wendy Jiang ’16 Picker Engineering Program, Smith College
+-   Tinli Yarrington ’18 Picker Engineering Program, Smith College
+-   Melody Owen ‘17 Amherst College Andrew Kim ‘18 Amherst College Yuhan
+-  Wen ’20 Picker Engineering Program, Smith College Julia Clark ’21
+-   Picker Engineering Program, Smith College Keane Ng ’23 Amherst
+-   College Jiayi Sun ’25 Picker Engineering Program, Smith College
+-   Casey Crary ’26 Amherst College
