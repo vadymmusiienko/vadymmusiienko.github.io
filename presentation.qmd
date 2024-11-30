@@ -1,0 +1,264 @@
+---
+title: "Wine Reviews"
+author: "Vadym Musiienko"
+subtitle: "Analyzing Trends in Taste, Price, and Quality"
+date: "29 Nov 2024"
+format: 
+  revealjs:
+    logo: media/logo.png
+    footer: "Wine Reviews: Analyzing Trends in Taste, Price, and Quality"
+    transition: slide
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+library(tidyverse)
+library(ggrepel)
+
+# Load the data
+wine_data <- read_csv("data/winemag-data_first150k.csv")
+
+# Clean up the data
+wine_data <- wine_data |> filter(!(is.na(price) | is.na(country))) |>
+  mutate(country = as.factor(country)) |>
+  select(-c(region_1, region_2, winery))
+```
+
+## Data frame information
+
+
+Columns
+```{r}
+names(wine_data)
+
+```
+
+Rows
+```{r}
+glimpse(wine_data)
+```
+
+## Average price of wine by country
+
+
+```{r}
+#| fig-height: 7
+#| fig-width: 12
+#| fig-align: center
+
+wine_data |> 
+  group_by(country) |>
+  summarize(avr_price = mean(price)) |>
+  ggplot(aes(fct_reorder(country, avr_price, .desc = TRUE), avr_price,
+             fill = country)) +
+  geom_col(color = "black", width = 0.8, show.legend = FALSE) +
+  labs(
+    title = NULL,
+    x = NULL,
+    y = "Price in USD"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+:::{style="font-size: 22px;"}
+<em>
+The countries that produce the most expensive wines are the US, France, England, Hungary, and Luxembourg, with average prices ranging from 40 to 50 USD. On the other hand, the cheapest wine producers are Montenegro, Lithuania, Bulgaria, Bosnia, and Ukraine, where wines typically cost between 10 and 15 USD.
+</em>
+:::
+
+## Code
+
+```{r}
+#| eval: false
+#| echo: true
+
+wine_data |> 
+  group_by(country) |>
+  summarize(avr_price = mean(price)) |>
+  ggplot(aes(fct_reorder(country, avr_price, .desc = TRUE), avr_price,
+             fill = country)) +
+  geom_col(color = "black", width = 0.8, show.legend = FALSE) +
+  labs(
+    title = "Average price of wine by country",
+    x = NULL,
+    y = "Price in USD"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+## Correlation between Price and Quality
+
+```{r}
+#| fig-height: 6
+#| fig-width: 12
+#| fig-align: center
+
+wine_data |>
+  filter(price < 500) |>
+  group_by(price) |>
+  summarize(avr_rating = mean(points)) |>
+  ggplot(aes(price, avr_rating)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(color = "red") +
+  labs(
+    title = NULL,
+    x = "Price (USD)",
+    y = "Average rating (Points)"
+  ) +
+  theme_minimal()
+```
+
+:::{style="font-size: 22px;"}
+<em>
+There is definitely a correlation between price and rating, with more expensive wines tending to have higher ratings. However, the relationship is stronger in the 0 to 100 USD range, where price significantly impacts quality. Beyond 100 USD, wines are fairly similar in quality, with higher prices offering only a slight improvement.
+</em>
+:::
+
+## Code
+
+```{r}
+#| echo: true
+#| eval: false
+
+wine_data |>
+  filter(price < 500) |>
+  group_by(price) |>
+  summarize(avr_rating = mean(points)) |>
+  ggplot(aes(price, avr_rating)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(color = "red") +
+  labs(
+    title = "Price vs. Quality",
+    x = "Price (USD)",
+    y = "Average rating (Points)"
+  ) +
+  theme_minimal()
+```
+
+## Frequency of wine adjectives
+
+```{r}
+#| fig-height: 6
+#| fig-width: 12
+#| fig-align: center
+
+# Create a vector with the adjectives
+adjectives <- c("Acidic", "Astringent", "Barnyard", "Buttery", "Chewy",
+                "Earthy", "Flabby", "Fruity", "Fruit-forward",
+                "Herbaceous", "Jammy", "Juicy", "Musty", "Nutty",
+                "Oaky", "Opulent", "Perfumed", "Racy", "Spicy",
+                "Supple", "Tannic", "Toasty", "Vegetal", "Velvety")
+
+# Create a regex pattern to search for adjectives
+pattern <- paste0("(?i)", paste(adjectives, collapse = "|"))
+
+# Create a data frame with wine reviews where those adjectives were used
+wine_with_adj <- wine_data |> 
+  mutate(
+    adjective = factor(tolower(str_extract(description, pattern)))
+    ) |>
+  filter(!is.na(adjective))
+
+# Plot the frequency of each adjective
+wine_with_adj |> group_by(adjective) |>
+  summarise(count = n()) |>
+  ggplot(aes(count, fct_reorder(adjective, count, .desc = TRUE), 
+             fill = adjective)) +
+  geom_col(color = "black", width = 0.8, show.legend = FALSE) +
+  labs(
+    title = NULL,
+    y = NULL,
+    x = "Number of times mentioned"
+  ) +
+  theme_minimal()
+```
+
+## Code
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Create a vector with the adjectives
+adjectives <- c("Acidic", "Astringent", "Barnyard", "Buttery", "Chewy",
+                "Earthy", "Flabby", "Fruity", "Fruit-forward",
+                "Herbaceous", "Jammy", "Juicy", "Musty", "Nutty",
+                "Oaky", "Opulent", "Perfumed", "Racy", "Spicy",
+                "Supple", "Tannic", "Toasty", "Vegetal", "Velvety")
+
+# Create a regex pattern to search for adjectives
+pattern <- paste0("(?i)", paste(adjectives, collapse = "|"))
+
+# Create a data frame with wine reviews where those adjectives were used
+wine_with_adj <- wine_data |> 
+  mutate(
+    adjective = factor(tolower(str_extract(description, pattern)))
+    ) |>
+  filter(!is.na(adjective))
+
+# Plot the frequency of each adjective
+wine_with_adj |> group_by(adjective) |>
+  summarise(count = n()) |>
+  ggplot(aes(count, fct_reorder(adjective, count, .desc = TRUE), 
+             fill = adjective)) +
+  geom_col(color = "black", width = 0.8, show.legend = FALSE) +
+  labs(
+    title = "Adjective Frequency in Wine Reviews",
+    y = NULL,
+    x = "Number of times mentioned"
+  ) +
+  theme_minimal()
+```
+
+## Average Price and Rating of Wine by Flavor Note
+
+```{r}
+#| fig-height: 6
+#| fig-width: 12
+#| fig-align: center
+
+# Plot average price and rating depending on a flavor note
+wine_with_adj |> group_by(adjective) |>
+  summarise(avr_price = mean(price), avr_points = mean(points)) |>
+  ggplot(aes(avr_price, avr_points)) +
+  geom_point(size = 3) +
+  geom_label_repel(aes(label = adjective),
+                   size = 2.5, color = "black", fill = "lightyellow", 
+                   label.size = 0.25, label.padding = 0.25, 
+                   box.padding = 0.25) +
+  labs(
+    title = NULL,
+    x = "Average Price (USD)",
+    y = "Average Points (Points)"
+  ) +
+  theme_minimal()
+```
+
+
+## Code
+
+```{r}
+#| echo: true
+#| eval: false
+
+wine_with_adj |> group_by(adjective) |>
+  summarise(avr_price = mean(price), avr_points = mean(points)) |>
+  ggplot(aes(avr_price, avr_points)) +
+  geom_point(size = 3) +
+  geom_label_repel(aes(label = adjective),
+                   size = 2.5, color = "black", fill = "lightyellow", 
+                   label.size = 0.25, label.padding = 0.25, 
+                   box.padding = 0.25) +
+  labs(
+    title = "Average Price and Rating of Wine by Flavor Note",
+    x = "Average Price (USD)",
+    y = "Average Points (Points)"
+  ) +
+  theme_minimal()
+```
+

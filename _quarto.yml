@@ -20,6 +20,8 @@ website:
         menu: 
           - text: "Motivational Coach"
             href: https://www.motivational-coach.com/
+          - text: "Presentation"
+            href: presentation.html
     tools:
       - icon: github
         href: https://github.com/vadymmusiienko/vadymmusiienko.github.io

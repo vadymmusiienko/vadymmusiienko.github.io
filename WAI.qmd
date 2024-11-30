@@ -287,6 +287,9 @@ The following R code generates the visualization to compare mean
 absorbance between male and female participants:
 
 ```{r}
+#| fig-height: 7
+#| fig-width: 7
+
 # Graph the data
 wai_sex |>
   ggplot(
@@ -320,14 +323,9 @@ wai_sex |>
   custom_theme
 ```
 
-This plot reveals that female participants exhibit higher absorbance
-than males around the 800 Hz frequency range. However, the difference
-diminishes below 800 Hz and beyond 5000 Hz, where absorbance levels for
-both sexes are nearly identical.
+This plot shows that female participants experience higher absorbance than males in the 800 Hz frequency range. However, the difference decreases after approximately 5000 Hz, where absorbance levels for both sexes become nearly identical.
 
 #### Disconnect from the Database
-
-The last step is to disconnetc from the database.
 
 ```{r}
 # Disconnect from the database
