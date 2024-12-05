@@ -540,6 +540,50 @@ $ variety     &lt;chr&gt; "Cabernet Sauvignon", "Tinta de Toro", "Sauvignon Blan
 <span id="cb6-13"><a></a>  ) <span class="sc">+</span></span>
 <span id="cb6-14"><a></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="berry-notes" class="slide level2">
+<h2>Berry Notes</h2>
+
+<img data-src="presentation_files/figure-revealjs/unnamed-chunk-12-1.png" class="quarto-figure quarto-figure-center r-stretch" width="1152"></section>
+<section id="code-4" class="slide level2">
+<h2>Code</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="co"># A data frame with wines that were described with some berry</span></span>
+<span id="cb7-2"><a></a>berries <span class="ot">&lt;-</span> wine_data <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(description, <span class="st">"(?i)</span><span class="sc">\\</span><span class="st">b</span><span class="sc">\\</span><span class="st">w+erry</span><span class="sc">\\</span><span class="st">b"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a></a>  <span class="fu">mutate</span>(<span class="at">berry =</span> <span class="fu">tolower</span>(<span class="fu">str_extract</span>(description, <span class="st">"(?i)</span><span class="sc">\\</span><span class="st">b</span><span class="sc">\\</span><span class="st">w+erry</span><span class="sc">\\</span><span class="st">b"</span>)))</span>
+<span id="cb7-5"><a></a></span>
+<span id="cb7-6"><a></a><span class="co"># The 6 most used berries used to describe wine (except for just "berry")</span></span>
+<span id="cb7-7"><a></a>topberries <span class="ot">&lt;-</span> berries <span class="sc">|&gt;</span> <span class="fu">group_by</span>(berry) <span class="sc">|&gt;</span></span>
+<span id="cb7-8"><a></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb7-9"><a></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(count)) <span class="sc">|&gt;</span></span>
+<span id="cb7-10"><a></a>  <span class="fu">filter</span>(berry <span class="sc">!=</span> <span class="st">"berry"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-11"><a></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">6</span>)</span>
+<span id="cb7-12"><a></a></span>
+<span id="cb7-13"><a></a><span class="co"># Plot the price of wine with different berry notes</span></span>
+<span id="cb7-14"><a></a>berries <span class="sc">|&gt;</span> </span>
+<span id="cb7-15"><a></a>  <span class="fu">filter</span>(berry <span class="sc">%in%</span> topberries<span class="sc">$</span>berry) <span class="sc">|&gt;</span></span>
+<span id="cb7-16"><a></a>  <span class="fu">group_by</span>(berry)<span class="sc">|&gt;</span></span>
+<span id="cb7-17"><a></a>  <span class="fu">summarize</span>(<span class="at">avr_price =</span> <span class="fu">mean</span>(price)) <span class="sc">|&gt;</span></span>
+<span id="cb7-18"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="fu">fct_reorder</span>(berry, avr_price, <span class="at">.desc =</span> <span class="cn">TRUE</span>), avr_price,</span>
+<span id="cb7-19"><a></a>             <span class="at">fill =</span> berry)) <span class="sc">+</span></span>
+<span id="cb7-20"><a></a>  <span class="fu">geom_col</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb7-21"><a></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">45</span>)) <span class="sc">+</span></span>
+<span id="cb7-22"><a></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-23"><a></a>    <span class="at">title =</span> <span class="st">"Average Price of Wine with Different Berry Notes"</span>,</span>
+<span id="cb7-24"><a></a>    <span class="at">y =</span> <span class="st">"Average price (USD)"</span>,</span>
+<span id="cb7-25"><a></a>    <span class="at">x =</span> <span class="cn">NULL</span></span>
+<span id="cb7-26"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb7-27"><a></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> berry), <span class="at">color =</span> <span class="st">"black"</span>, </span>
+<span id="cb7-28"><a></a>            <span class="at">position =</span> <span class="fu">position_stack</span>(<span class="at">vjust =</span> <span class="fl">0.9</span>),</span>
+<span id="cb7-29"><a></a>            <span class="at">size =</span> <span class="fl">3.5</span>,</span>
+<span id="cb7-30"><a></a>            <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb7-31"><a></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-32"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="thank-you-for-watching" class="slide level2">
+<h2>Thank you for watching!</h2>
 
 <div class="quarto-auto-generated-content">
 <p><img src="media/logo.png" class="slide-logo"></p>

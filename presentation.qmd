@@ -262,3 +262,88 @@ wine_with_adj |> group_by(adjective) |>
   theme_minimal()
 ```
 
+## Berry Notes
+
+```{r}
+#| fig-height: 6
+#| fig-width: 12
+#| fig-align: center
+
+# A data frame with wines that were described with some berry
+berries <- wine_data |>
+  filter(str_detect(description, "(?i)\\b\\w+erry\\b")) |>
+  mutate(berry = tolower(str_extract(description, "(?i)\\b\\w+erry\\b")))
+
+# The 6 most used berries used to describe wine (except for just "berry")
+topberries <- berries |> group_by(berry) |>
+  summarize(count = n()) |> 
+  arrange(desc(count)) |>
+  filter(berry != "berry") |>
+  slice_head(n = 6)
+
+# Plot the price of wine with different berry notes
+berries |> 
+  filter(berry %in% topberries$berry) |>
+  group_by(berry)|>
+  summarize(avr_price = mean(price)) |>
+  ggplot(aes(fct_reorder(berry, avr_price, .desc = TRUE), avr_price,
+             fill = berry)) +
+  geom_col(color = "black", show.legend = FALSE) +
+  coord_cartesian(ylim = c(25, 45)) +
+  labs(
+    title = "Average Price of Wine with Different Berry Notes",
+    y = "Average price (USD)",
+    x = NULL
+  ) +
+  geom_text(aes(label = berry), color = "black", 
+            position = position_stack(vjust = 0.9),
+            size = 3.5,
+            alpha = 0.8) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank())
+```
+
+
+## Code
+
+```{r}
+#| echo: true
+#| eval: false
+
+# A data frame with wines that were described with some berry
+berries <- wine_data |>
+  filter(str_detect(description, "(?i)\\b\\w+erry\\b")) |>
+  mutate(berry = tolower(str_extract(description, "(?i)\\b\\w+erry\\b")))
+
+# The 6 most used berries used to describe wine (except for just "berry")
+topberries <- berries |> group_by(berry) |>
+  summarize(count = n()) |> 
+  arrange(desc(count)) |>
+  filter(berry != "berry") |>
+  slice_head(n = 6)
+
+# Plot the price of wine with different berry notes
+berries |> 
+  filter(berry %in% topberries$berry) |>
+  group_by(berry)|>
+  summarize(avr_price = mean(price)) |>
+  ggplot(aes(fct_reorder(berry, avr_price, .desc = TRUE), avr_price,
+             fill = berry)) +
+  geom_col(color = "black", show.legend = FALSE) +
+  coord_cartesian(ylim = c(25, 45)) +
+  labs(
+    title = "Average Price of Wine with Different Berry Notes",
+    y = "Average price (USD)",
+    x = NULL
+  ) +
+  geom_text(aes(label = berry), color = "black", 
+            position = position_stack(vjust = 0.9),
+            size = 3.5,
+            alpha = 0.8) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank())
+```
+
+
+## Thank you for watching!
+
