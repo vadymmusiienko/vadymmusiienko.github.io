@@ -183,7 +183,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a>
   <ul class="collapse">
-  <li><a href="#part-1-reproducing-voss-2020-figure-1" id="toc-part-1-reproducing-voss-2020-figure-1" class="nav-link" data-scroll-target="#part-1-reproducing-voss-2020-figure-1">Part 1: Reproducing Voss (2020) Figure 1</a></li>
+  <li><a href="#part-1-reproducing-voss-2019-figure-1" id="toc-part-1-reproducing-voss-2019-figure-1" class="nav-link" data-scroll-target="#part-1-reproducing-voss-2019-figure-1">Part 1: Reproducing Voss (2019) Figure 1</a></li>
   <li><a href="#part-2-mean-absorbance-for-males-and-females" id="toc-part-2-mean-absorbance-for-males-and-females" class="nav-link" data-scroll-target="#part-2-mean-absorbance-for-males-and-females">Part 2: Mean absorbance for males and females</a></li>
   <li><a href="#acknowledgments" id="toc-acknowledgments" class="nav-link" data-scroll-target="#acknowledgments">Acknowledgments</a></li>
   </ul></li>
@@ -222,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This analysis explores the Wideband Acoustic Immittance (WAI) Database hosted by Smith College. The database contains measurements of acoustic properties in human ears, including absorbance, power reflectance, impedance, and other related quantities. Implemented in MySQL, this online database serves as a repository for normative adult WAI measures, facilitating data sharing and analysis across different research studies. The database is publicly accessible <a href="http://www.science.smith.edu/wai-database/">here</a>.</p>
 <p>The analysis has two primary objectives:</p>
 <ol type="1">
-<li>Reproduce Figure 1 from Voss (2020), which illustrates mean absorbances across various studies</li>
+<li>Reproduce Figure 1 from Voss (2019), which illustrates mean absorbances across various studies</li>
 <li>Visualize WAI mean absorbance across various studies for male and female participats</li>
 </ol>
 <section id="import-libraries" class="level4">
@@ -600,9 +600,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The Subjects table contains demographic information about study participants, including ethnicity, sex, and other relevant characteristics.</p>
 </section>
-<section id="part-1-reproducing-voss-2020-figure-1" class="level3">
-<h3 data-anchor-id="part-1-reproducing-voss-2020-figure-1">Part 1: Reproducing Voss (2020) Figure 1</h3>
-<p>To recreate Figure 1 from <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7093226/">Voss (2020)</a>, we first need to identify the publications included in the original figure. Let’s examine the available identifiers in the database.</p>
+<section id="part-1-reproducing-voss-2019-figure-1" class="level3">
+<h3 data-anchor-id="part-1-reproducing-voss-2019-figure-1">Part 1: Reproducing Voss (2019) Figure 1</h3>
+<p>To recreate Figure 1 from <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7093226/">Voss (2019)</a>, we first need to identify the publications included in the original figure. Let’s examine the available identifiers in the database.</p>
 <section id="unique-identifiers" class="level4">
 <h4 data-anchor-id="unique-identifiers">Unique identifiers</h4>
 <div class="cell">
@@ -650,7 +650,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 </div>
 </div>
-<p>After reviewing the list of Identifiers, I identified the following publications used in Voss (2020): Abur_2014, Feeney_2017, Groon_2015, Lewis_2015, Liu_2008, Rosowski_2012, Shahnaz_2006, Shaver_2013, Sun_2016, Voss_1994, Voss_2010,and Werner_2010.</p>
+<p>After reviewing the list of Identifiers, I identified the following publications used in Voss (2019): Abur_2014, Feeney_2017, Groon_2015, Lewis_2015, Liu_2008, Rosowski_2012, Shahnaz_2006, Shaver_2013, Sun_2016, Voss_1994, Voss_2010,and Werner_2010.</p>
 </section>
 <section id="data-acquisition" class="level4">
 <h4 data-anchor-id="data-acquisition">Data acquisition</h4>
@@ -705,8 +705,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="recreate-figure-1-from-voss-2020" class="level4">
-<h4 data-anchor-id="recreate-figure-1-from-voss-2020">Recreate Figure 1 from Voss (2020)</h4>
+<section id="recreate-figure-1-from-voss-2019" class="level4">
+<h4 data-anchor-id="recreate-figure-1-from-voss-2019">Recreate Figure 1 from Voss (2019)</h4>
 <p>Here is the code for the final visualization:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>figure_data <span class="sc">|&gt;</span> </span>
@@ -747,13 +747,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Voss (2020) describes the figure as follows:</p>
+<p>Voss (2019) describes the figure as follows:</p>
 <p>“Mean absorbances for the 12 studies within the WAI database as of July 1, 2019. The legend includes peer-reviewed publications, the number of individual ears, and the equipment used in the studies. For ears with multiple measurements, the average was used. The figure includes all ears in the database, without controlling for the number of ears from each subject.”</p>
 </section>
 </section>
 <section id="part-2-mean-absorbance-for-males-and-females" class="level3">
 <h3 data-anchor-id="part-2-mean-absorbance-for-males-and-females">Part 2: Mean absorbance for males and females</h3>
-<p>This analysis aims to determine whether there is a difference in mean absorbance between male and female participants. As in the previous analysis, we use the same set of publications.</p>
+<p>This analysis aims to determine whether there is a difference in mean absorbance between male and female participants. As in the previous analysis, we use the same set of publications, but this time we examine male and female participants separately.</p>
 <section id="data-acquisition-1" class="level4">
 <h4 data-anchor-id="data-acquisition-1">Data acquisition</h4>
 <p>Participant sex information is retrieved from the Subjects table, which is joined with the Measurements table to link absorbance data with each subject’s personal information.</p>
@@ -777,7 +777,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="visualization" class="level4">
 <h4 data-anchor-id="visualization">Visualization</h4>
-<p>The following R code generates the visualization to compare mean absorbance between male and female participants:</p>
+<p>The following R code generates the visualization to compare mean absorbance between male and female participants across multiple studies:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graph the data</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>wai_sex <span class="sc">|&gt;</span></span>
@@ -818,7 +818,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>This plot shows that female participants experience higher absorbance than males in the 800 Hz frequency range. However, the difference decreases after approximately 5000 Hz, where absorbance levels for both sexes become nearly identical.</p>
+<p>Each study has two lines: blue representing male participants and red representing female participants. The 12 studies visualized here are the same as those in Part 1.</p>
+<p>This plot shows that female participants experience higher absorbance than male participants in the 800 Hz frequency range. However, the difference decreases after approximately 5000 Hz, at which point the absorbance levels for both sexes become nearly identical.</p>
 </section>
 <section id="disconnect-from-the-database" class="level4">
 <h4 data-anchor-id="disconnect-from-the-database">Disconnect from the Database</h4>
@@ -833,22 +834,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The normative WAI database and corresponding website are funded by the National Institutes of Health, NIDCD (R15 DC014129). The server is hosted at Smith College.</p>
 <section id="citation" class="level4">
 <h4 data-anchor-id="citation">Citation</h4>
-<p>The DOI of this project is: <a href="https://doi.org/10.35482/egr.001.2022">doi.org/10.35482/egr.001.2022</a></p>
-<p>Contributors to this work include:</p>
-<ul>
-<li>Dr.&nbsp;Susan E. Voss, Picker Engineering Program, Smith College</li>
-<li>Dr.&nbsp;Nicholas J. Horton, Professor of Statistics and Data Science, Amherst College</li>
-<li>Dr.&nbsp;Benjamin Baumer, Statistical and Data Sciences, Smith College</li>
-<li>Suzanne Palmer Computing and Technical Services (CATS), Smith College</li>
-<li>Melinda Pontes ’15 Picker Engineering Program, Smith College</li>
-<li>Wendy Jiang ’16 Picker Engineering Program, Smith College</li>
-<li>Tinli Yarrington ’18 Picker Engineering Program, Smith College</li>
-<li>Melody Owen ’17 Amherst College Andrew Kim ’18 Amherst College Yuhan</li>
-<li>Wen ’20 Picker Engineering Program, Smith College Julia Clark ’21</li>
-<li>Picker Engineering Program, Smith College Keane Ng ’23 Amherst</li>
-<li>College Jiayi Sun ’25 Picker Engineering Program, Smith College</li>
-<li>Casey Crary ’26 Amherst College</li>
-</ul>
+<p>Voss, Susan E. Ph.D.&nbsp;Resource Review. Ear and Hearing 40(6):p 1481, November/December 2019. | DOI: 10.1097/AUD.0000000000000790</p>
 
 
 </section>

@@ -32,7 +32,7 @@ studies. The database is publicly accessible
 
 The analysis has two primary objectives:
 
-1.  Reproduce Figure 1 from Voss (2020), which illustrates mean
+1.  Reproduce Figure 1 from Voss (2019), which illustrates mean
     absorbances across various studies
 2.  Visualize WAI mean absorbance across various studies for male and
     female participats
@@ -115,10 +115,10 @@ The Subjects table contains demographic information about study
 participants, including ethnicity, sex, and other relevant
 characteristics.
 
-### Part 1: Reproducing Voss (2020) Figure 1
+### Part 1: Reproducing Voss (2019) Figure 1
 
 To recreate Figure 1 from [Voss
-(2020)](https://pmc.ncbi.nlm.nih.gov/articles/PMC7093226/), we first
+(2019)](https://pmc.ncbi.nlm.nih.gov/articles/PMC7093226/), we first
 need to identify the publications included in the original figure. Let's
 examine the available identifiers in the database.
 
@@ -131,7 +131,7 @@ SELECT DISTINCT(Identifier) FROM Measurements;
 ```
 
 After reviewing the list of Identifiers, I identified the following
-publications used in Voss (2020): Abur_2014, Feeney_2017, Groon_2015,
+publications used in Voss (2019): Abur_2014, Feeney_2017, Groon_2015,
 Lewis_2015, Liu_2008, Rosowski_2012, Shahnaz_2006, Shaver_2013,
 Sun_2016, Voss_1994, Voss_2010,and Werner_2010.
 
@@ -197,7 +197,7 @@ custom_theme <- theme(
 )
 ```
 
-#### Recreate Figure 1 from Voss (2020)
+#### Recreate Figure 1 from Voss (2019)
 
 Here is the code for the final visualization:
 
@@ -238,7 +238,7 @@ figure_data |>
 
 ```
 
-Voss (2020) describes the figure as follows:
+Voss (2019) describes the figure as follows:
 
 "Mean absorbances for the 12 studies within the WAI database as of July
 1, 2019. The legend includes peer-reviewed publications, the number of
@@ -251,7 +251,8 @@ each subject."
 
 This analysis aims to determine whether there is a difference in mean
 absorbance between male and female participants. As in the previous
-analysis, we use the same set of publications.
+analysis, we use the same set of publications, but this time we examine male
+and female participants separately.
 
 #### Data acquisition
 
@@ -284,7 +285,7 @@ GROUP BY Frequency, s.Sex, m.Identifier
 #### Visualization
 
 The following R code generates the visualization to compare mean
-absorbance between male and female participants:
+absorbance between male and female participants across multiple studies:
 
 ```{r}
 #| fig-height: 7
@@ -323,7 +324,9 @@ wai_sex |>
   custom_theme
 ```
 
-This plot shows that female participants experience higher absorbance than males in the 800 Hz frequency range. However, the difference decreases after approximately 5000 Hz, where absorbance levels for both sexes become nearly identical.
+Each study has two lines: blue representing male participants and red representing female participants. The 12 studies visualized here are the same as those in Part 1.
+
+This plot shows that female participants experience higher absorbance than male participants in the 800 Hz frequency range. However, the difference decreases after approximately 5000 Hz, at which point the absorbance levels for both sexes become nearly identical.
 
 #### Disconnect from the Database
 
@@ -340,21 +343,4 @@ hosted at Smith College.
 
 #### Citation
 
-The DOI of this project is: [doi.org/10.35482/egr.001.2022](https://doi.org/10.35482/egr.001.2022)
-
-Contributors to this work include:
-
--   Dr. Susan E. Voss, Picker Engineering Program, Smith College
--   Dr. Nicholas J. Horton, Professor of Statistics and Data Science,
-    Amherst College
--   Dr. Benjamin Baumer, Statistical and Data Sciences, Smith College
--   Suzanne Palmer Computing and Technical Services (CATS), Smith
-    College
--   Melinda Pontes ’15 Picker Engineering Program, Smith College
--   Wendy Jiang ’16 Picker Engineering Program, Smith College
--   Tinli Yarrington ’18 Picker Engineering Program, Smith College
--   Melody Owen ‘17 Amherst College Andrew Kim ‘18 Amherst College Yuhan
--  Wen ’20 Picker Engineering Program, Smith College Julia Clark ’21
--   Picker Engineering Program, Smith College Keane Ng ’23 Amherst
--   College Jiayi Sun ’25 Picker Engineering Program, Smith College
--   Casey Crary ’26 Amherst College
+Voss, Susan E. Ph.D. Resource Review. Ear and Hearing 40(6):p 1481, November/December 2019. | DOI: 10.1097/AUD.0000000000000790 
